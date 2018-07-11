@@ -61,7 +61,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\NewBehaviourScript.cs" />
     <Compile Include="Assets\NGUI\Examples\Scripts\InventorySystem\Game\EquipItems.cs" />
     <Compile Include="Assets\NGUI\Examples\Scripts\InventorySystem\Game\EquipRandomItem.cs" />
     <Compile Include="Assets\NGUI\Examples\Scripts\InventorySystem\Game\UICursor.cs" />
@@ -202,22 +201,9 @@
     <Compile Include="Assets\NGUI\Scripts\UI\UITexture.cs" />
     <Compile Include="Assets\NGUI\Scripts\UI\UITooltip.cs" />
     <Compile Include="Assets\NGUI\Scripts\UI\UIViewport.cs" />
+    <Compile Include="Assets\Scripts\InitScripts.cs" />
+    <Compile Include="Assets\Scripts\Test\BoxCtrl.cs" />
     <None Include="Assets\Documents\CustomDocs\视频目录.md" />
-    <None Include="Assets\Documents\OriginalDocs\1\c#基础.docx" />
-    <None Include="Assets\Documents\OriginalDocs\1\UGUI.vsdx" />
-    <None Include="Assets\Documents\OriginalDocs\1\Unity3D粒子系统.docx" />
-    <None Include="Assets\Documents\OriginalDocs\1\Unity5场景烘焙方法.docx" />
-    <None Include="Assets\Documents\OriginalDocs\1\场景制作规范.docx" />
-    <None Include="Assets\Documents\OriginalDocs\1\游戏架构.vsdx" />
-    <None Include="Assets\Documents\OriginalDocs\2\c#基础.docx" />
-    <None Include="Assets\Documents\OriginalDocs\2\Lua框架.vsdx" />
-    <None Include="Assets\Documents\OriginalDocs\2\UGUI.vsdx" />
-    <None Include="Assets\Documents\OriginalDocs\2\Unity3D粒子系统.docx" />
-    <None Include="Assets\Documents\OriginalDocs\2\Unity5场景烘焙方法.docx" />
-    <None Include="Assets\Documents\OriginalDocs\2\场景制作规范.docx" />
-    <None Include="Assets\Documents\OriginalDocs\2\渠道列表.xlsx" />
-    <None Include="Assets\Documents\OriginalDocs\2\游戏架构.vsdx" />
-    <None Include="Assets\Documents\OriginalDocs\2\登录和支付.vsdx" />
     <None Include="Assets\NGUI\Examples\Shaders\Unlit - Depth Cutout.shader" />
     <None Include="Assets\NGUI\ReadMe - 3.11.4.txt" />
     <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Masked 1.shader" />
@@ -265,7 +251,6 @@
     <None Include="Assets\NGUI\Examples\Atlases\SciFi\SciFi Font - Normal.txt" />
     <None Include="Assets\NGUI\Examples\Models\Orc Armor\Orc Armor.shader" />
     <None Include="Assets\NGUI\Examples\Resources\Localization.txt" />
-    <None Include="Assets\Scenes\SampleScene.unity" />
     <Reference Include="Unity.PackageManagerUI.Editor">
       <HintPath>D:/【My Document】/My Projects/Unity Projects/UU/UU_Lesson/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
     </Reference>
