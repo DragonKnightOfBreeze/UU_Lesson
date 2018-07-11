@@ -1,0 +1,254 @@
+
+CREATE Procedure [dbo].[GetPageList] 
+
+@TableName varchar(200), --表名 
+
+@Fields varchar(1000) = '*', --字段名(全部字段为*) 
+
+@OrderField varchar(500), --排序字段(必须!支持多字段) 
+
+@SqlWhere varchar(5000) = Null,--条件语句(不用加where) 
+
+@PageSize int, --每页多少条记录 
+
+@PageIndex int = 1 , --指定当前为第几页 
+
+@TotalCount int output --返回总记录数 
+
+as 
+
+begin 
+
+Begin Tran --开始事务 
+
+Declare @sql nvarchar(4000); 
+
+Declare @TotalPage int;
+
+set @TotalCount = 0;
+
+set @TableName = @TableName;
+
+if(@PageIndex is null)
+	set @PageIndex = -1
+
+if(@PageSize is null)
+	set @PageSize = -1
+
+if (@PageIndex<1 and @PageSize <1) 
+	begin
+		if (@SqlWhere='' or @SqlWhere=NULL) 
+			set @sql = 'select '+@Fields+' from 
+
+'+@TableName+' order by '+@OrderField
+		else
+			set @sql = 'select '+@Fields+' from 
+
+'+@TableName+ ' where ' + @SqlWhere +' order by '+@OrderField
+	end
+else
+	begin
+		--计算总记录数 
+
+		if (@SqlWhere='' or @SqlWhere=NULL) 
+
+		set @sql = 'select @TotalCount = count(1) from ' + 
+
+@TableName 
+
+		else 
+
+		set @sql = 'select @TotalCount = count(1) from ' + 
+
+@TableName + ' where ' + @SqlWhere 
+
+		EXEC sp_executesql @sql,N'@TotalCount int 
+
+OUTPUT',@TotalCount OUTPUT--计算总记录数 
+
+		--计算总页数 
+
+		select @TotalPage=CEILING((@TotalCount+0.0)/@PageSize) 
+
+		if (@SqlWhere='' or @SqlWhere=NULL) 
+
+		set @sql = 'Select * FROM (select ROW_NUMBER() Over
+
+(order by ' + @OrderField + ') as rowId,' + @Fields + ' from ' + 
+
+@TableName 
+
+		else 
+
+		set @sql = 'Select * FROM (select ROW_NUMBER() Over
+
+(order by ' + @OrderField + ') as rowId,' + @Fields + ' from ' + 
+
+@TableName + ' where ' + @SqlWhere 
+
+		--处理页数超出范围情况 
+
+		if @PageIndex<=0 
+
+		Set @PageIndex = 1 
+
+		if @PageIndex>@TotalPage 
+
+		Set @PageIndex = @TotalPage 
+
+		--处理开始点和结束点 
+
+		Declare @StartRecord int 
+
+		Declare @EndRecord int 
+
+		set @StartRecord = (@PageIndex-1)*@PageSize + 1 
+
+		set @EndRecord = @StartRecord + @PageSize - 1 
+
+		--继续合成sql语句 
+
+		set @Sql = @Sql + ') as _pagelisttable_ where rowId 
+
+between ' + Convert(varchar(50),@StartRecord) + ' and ' + Convert
+
+(varchar(50),@EndRecord) 
+
+	end
+	
+print @Sql
+
+Exec(@Sql) 
+
+-------------------------------------------------- - 
+
+If @@Error <> 0 
+
+Begin 
+
+RollBack Tran 
+
+Return -1 
+
+End 
+
+Else 
+
+Begin 
+
+Commit Tran 
+
+Return @TotalPage ---返回总页数 
+
+End 
+
+end
+
+
+
+
+
+GO
+
+
+
+CREATE PROCEDURE [dbo].[GetPageList_High]
+	(
+		@TableName VARCHAR(255), -- 表名
+		@Fields varchar(1000) = '*', -- 需要返回的列
+		@OrderField VARCHAR(255)='', -- 排序的字段名
+		@SqlWhere VARCHAR(2000) = '', -- 查询条件 (注意: 不要加 WHERE)
+		@PageSize INT = 10, -- 页尺寸
+		@PageIndex INT = 1, -- 页码
+		@OrderType BIT = 0, -- 设置排序类型, 非 0 值则降序
+		@TotalCount int output --返回总记录数 
+	)
+AS
+
+	SET NOCOUNT ON
+	
+	begin tran
+	begin try
+
+		DECLARE @strSQL VARCHAR(5000) -- 主语句
+		DECLARE @strTmp VARCHAR(1000) -- 临时变量
+		DECLARE @strOrder VARCHAR(400) -- 排序类型
+		declare @sql nvarchar(1000)
+
+		if @PageIndex<1 and @PageSize<1
+		begin
+			if (@SqlWhere='' or @SqlWhere=NULL) 
+				set @strSQL = 'select '+@Fields+' from '+@TableName+' order by '+@OrderField
+			else
+				set @strSQL = 'select '+@Fields+' from '+@TableName+ ' where ' + @SqlWhere +' order by '+@OrderField
+				
+			if @OrderType!=0
+				set @strSQL=@strSQL+' desc '
+				
+		end
+		else
+		begin
+			--计算总记录数 
+
+			if (@SqlWhere='' or @SqlWhere=NULL) 
+				set @sql = 'select @TotalCount = count(1) from ' + @TableName 
+			else 
+				set @sql = 'select @TotalCount = count(1) from ' + @TableName + ' where ' + @SqlWhere 
+
+
+			EXEC sp_executesql @sql,N'@TotalCount int OUTPUT',@TotalCount OUTPUT--计算总记录数 
+
+			IF @OrderType != 0
+				BEGIN
+					SET @strTmp = '<(SELECT MIN'
+					SET @strOrder = ' ORDER BY ' + @OrderField +' DESC'
+					--如果@OrderType不是0，就执行降序，这句很重要
+				END
+			ELSE
+				BEGIN
+					SET @strTmp = '>(SELECT MAX'
+					SET @strOrder = ' ORDER BY ' + @OrderField +' ASC'
+				END
+
+			IF @PageIndex = 1
+				BEGIN
+					IF @SqlWhere != ''
+						SET @strSQL = 'SELECT TOP ' + str(@PageSize) +' '+@Fields+ ' FROM ' + @TableName + ' WHERE ' + @SqlWhere + ' ' + @strOrder
+					ELSE
+						SET @strSQL = 'SELECT TOP ' + str(@PageSize) +' '+@Fields+ ' FROM '+ @TableName + ' '+ @strOrder
+					--如果是第一页就执行以上代码，这样会加快执行速度
+				END
+			ELSE
+				BEGIN
+				declare @OrderFi varchar(50)
+
+				set @OrderFi=SUBSTRING(@OrderField,CHARINDEX('.',@OrderField)+1,LEN(@OrderField));
+					--以下代码赋予了@strSQL以真正执行的SQL代码
+					SET @strSQL = 'SELECT TOP ' + str(@PageSize) +' '+@Fields+ ' FROM '
+					+ @TableName + ' WHERE ' + @OrderField + '' + @strTmp + '('+ @OrderFi + ') FROM (SELECT TOP ' + str((@PageIndex-1)*@PageSize) + ' '+ @OrderField + ' FROM ' + @TableName + '' + @strOrder + ') AS tblTmp)'+ @strOrder
+					IF @SqlWhere != ''
+					SET @strSQL = 'SELECT TOP ' + str(@PageSize) +' '+@Fields+ ' FROM '
+					+ @TableName + ' WHERE ' + @OrderField + '' + @strTmp + '('
+					+ @OrderFi + ') FROM (SELECT TOP ' + str((@PageIndex-1)*@PageSize) + ' '
+					+ @OrderField + ' FROM ' + @TableName + ' WHERE ' + @SqlWhere + ' '
+					+ @strOrder + ') AS tblTmp) AND ' + @SqlWhere + ' ' + @strOrder
+
+				END
+		end
+
+		EXEC (@strSQL)
+		commit tran
+	end try
+	begin catch
+		rollback tran
+	end catch
+	
+	SET NOCOUNT OFF
+
+
+
+
+
+GO
+
+

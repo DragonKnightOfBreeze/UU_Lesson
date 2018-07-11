@@ -1,0 +1,32 @@
+装备 Equipment
+
+武器 Weapon
+帽子 Cap
+衣服 Clothes
+手套 Glove
+鞋子 Shoe
+护符 Amulet
+护腕 Cuff
+腰带 Belt
+
+
+
+================
+元宝 Money
+金币 Gold
+经验 Exp
+HP
+MP
+攻击力 Attack
+防御 Defense
+命中 Hit
+闪避 Dodge
+暴击 Cri
+抗性 Res
+综合战斗力 Fighting
+
+JobId
+NickName
+Level
+
+
