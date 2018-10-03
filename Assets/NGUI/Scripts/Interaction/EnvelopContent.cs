@@ -6,51 +6,46 @@
 using UnityEngine;
 
 /// <summary>
-/// This script is capable of resizing the widget it's attached to in order to
-/// completely envelop targeted UI content.
+///     This script is capable of resizing the widget it's attached to in order to completely envelop targeted UI
+///     content.
 /// </summary>
-
 [RequireComponent(typeof(UIWidget))]
 [AddComponentMenu("NGUI/Interaction/Envelop Content")]
-public class EnvelopContent : MonoBehaviour
-{
+public class EnvelopContent : MonoBehaviour {
 	public Transform targetRoot;
-	public int padLeft = 0;
-	public int padRight = 0;
-	public int padBottom = 0;
-	public int padTop = 0;
+	public int padLeft;
+	public int padRight;
+	public int padBottom;
+	public int padTop;
 	public bool ignoreDisabled = true;
 
-	bool mStarted = false;
+	private bool mStarted;
 
-	void Start ()
-	{
+	private void Start() {
 		mStarted = true;
 		Execute();
 	}
 
-	void OnEnable () { if (mStarted) Execute(); }
+	private void OnEnable() {
+		if(mStarted) Execute();
+	}
 
 	[ContextMenu("Execute")]
-	public void Execute ()
-	{
-		if (targetRoot == transform)
-		{
+	public void Execute() {
+		if(targetRoot == transform) {
 			Debug.LogError("Target Root object cannot be the same object that has Envelop Content. Make it a sibling instead.", this);
 		}
-		else if (NGUITools.IsChild(targetRoot, transform))
-		{
+		else if(NGUITools.IsChild(targetRoot, transform)) {
 			Debug.LogError("Target Root object should not be a parent of Envelop Content. Make it a sibling instead.", this);
 		}
-		else
-		{
-			Bounds b = NGUIMath.CalculateRelativeWidgetBounds(transform.parent, targetRoot, !ignoreDisabled);
-			float x0 = b.min.x + padLeft;
-			float y0 = b.min.y + padBottom;
-			float x1 = b.max.x + padRight;
-			float y1 = b.max.y + padTop;
+		else {
+			var b = NGUIMath.CalculateRelativeWidgetBounds(transform.parent, targetRoot, !ignoreDisabled);
+			var x0 = b.min.x + padLeft;
+			var y0 = b.min.y + padBottom;
+			var x1 = b.max.x + padRight;
+			var y1 = b.max.y + padTop;
 
-			UIWidget w = GetComponent<UIWidget>();
+			var w = GetComponent<UIWidget>();
 			w.SetRect(x0, y0, x1 - x0, y1 - y0);
 			BroadcastMessage("UpdateAnchors", SendMessageOptions.DontRequireReceiver);
 			NGUITools.UpdateWidgetCollider(gameObject);

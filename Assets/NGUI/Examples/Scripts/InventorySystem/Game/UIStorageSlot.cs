@@ -5,30 +5,16 @@
 
 using UnityEngine;
 
-/// <summary>
-/// A UI script that keeps an eye on the slot in a storage container.
-/// </summary>
-
+/// <summary>A UI script that keeps an eye on the slot in a storage container.</summary>
 [AddComponentMenu("NGUI/Examples/UI Storage Slot")]
-public class UIStorageSlot : UIItemSlot
-{
+public class UIStorageSlot : UIItemSlot {
 	public UIItemStorage storage;
-	public int slot = 0;
+	public int slot;
 
-	override protected InvGameItem observedItem
-	{
-		get
-		{
-			return (storage != null) ? storage.GetItem(slot) : null;
-		}
-	}
+	protected override InvGameItem observedItem => storage != null ? storage.GetItem(slot) : null;
 
-	/// <summary>
-	/// Replace the observed item with the specified value. Should return the item that was replaced.
-	/// </summary>
-
-	override protected InvGameItem Replace (InvGameItem item)
-	{
-		return (storage != null) ? storage.Replace(slot, item) : item;
+	/// <summary>Replace the observed item with the specified value. Should return the item that was replaced.</summary>
+	protected override InvGameItem Replace(InvGameItem item) {
+		return storage != null ? storage.Replace(slot, item) : item;
 	}
 }

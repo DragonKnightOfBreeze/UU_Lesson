@@ -3,12 +3,8 @@
 // Copyright © 2011-2017 Tasharen Entertainment Inc
 //-------------------------------------------------
 
-using UnityEngine;
-
-namespace AnimationOrTween
-{
-	public enum Trigger
-	{
+namespace AnimationOrTween {
+	public enum Trigger {
 		OnClick,
 		OnHover,
 		OnPress,
@@ -22,27 +18,24 @@ namespace AnimationOrTween
 		OnDoubleClick,
 		OnSelect,
 		OnSelectTrue,
-		OnSelectFalse,
+		OnSelectFalse
 	}
 
-	public enum Direction
-	{
+	public enum Direction {
 		Reverse = -1,
 		Toggle = 0,
-		Forward = 1,
+		Forward = 1
 	}
 
-	public enum EnableCondition
-	{
+	public enum EnableCondition {
 		DoNothing = 0,
 		EnableThenPlay,
-		IgnoreDisabledState,
+		IgnoreDisabledState
 	}
 
-	public enum DisableCondition
-	{
+	public enum DisableCondition {
 		DisableAfterReverse = -1,
 		DoNotDisable = 0,
-		DisableAfterForward = 1,
+		DisableAfterForward = 1
 	}
 }

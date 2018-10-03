@@ -7,59 +7,52 @@ using UnityEngine;
 using System.Collections.Generic;
 
 /// <summary>
-/// Attach this script to a UITexture to turn it into a color picker.
-/// The color picking texture will be generated automatically.
+///     Attach this script to a UITexture to turn it into a color picker. The color picking texture will be generated
+///     automatically.
 /// </summary>
-
 [RequireComponent(typeof(UITexture))]
-public class UIColorPicker : MonoBehaviour
-{
-	static public UIColorPicker current;
+public class UIColorPicker : MonoBehaviour {
+	public static UIColorPicker current;
 
-	/// <summary>
-	/// Color picker's current value.
-	/// </summary>
-
+	/// <summary>Color picker's current value.</summary>
 	public Color value = Color.white;
 
-	/// <summary>
-	/// Widget that will be positioned above the current color selection. This value is optional.
-	/// </summary>
-
+	/// <summary>Widget that will be positioned above the current color selection. This value is optional.</summary>
 	public UIWidget selectionWidget;
 
-	/// <summary>
-	/// Delegate that will be called when the color picker is being interacted with.
-	/// </summary>
-
+	/// <summary>Delegate that will be called when the color picker is being interacted with.</summary>
 	public List<EventDelegate> onChange = new List<EventDelegate>();
 
-	[System.NonSerialized] Transform mTrans;
-	[System.NonSerialized] UITexture mUITex;
-	[System.NonSerialized] Texture2D mTex;
-	[System.NonSerialized] UICamera mCam;
-	[System.NonSerialized] Vector2 mPos;
-	[System.NonSerialized] int mWidth = 0;
-	[System.NonSerialized] int mHeight = 0;
+	[System.NonSerialized]
+	private Transform mTrans;
+	[System.NonSerialized]
+	private UITexture mUITex;
+	[System.NonSerialized]
+	private Texture2D mTex;
+	[System.NonSerialized]
+	private UICamera mCam;
+	[System.NonSerialized]
+	private Vector2 mPos;
+	[System.NonSerialized]
+	private int mWidth;
+	[System.NonSerialized]
+	private int mHeight;
 
-	void Start ()
-	{
+	private void Start() {
 		mTrans = transform;
 		mUITex = GetComponent<UITexture>();
 		mCam = UICamera.FindCameraForLayer(gameObject.layer);
 
 		mWidth = mUITex.width;
 		mHeight = mUITex.height;
-		Color[] cols = new Color[mWidth * mHeight];
+		var cols = new Color[mWidth * mHeight];
 
-		for (int y = 0; y < mHeight; ++y)
-		{
-			float fy = (y - 1f) / mHeight;
+		for(var y = 0; y < mHeight; ++y) {
+			var fy = (y - 1f) / mHeight;
 
-			for (int x = 0; x < mWidth; ++x)
-			{
-				float fx = (x - 1f) / mWidth;
-				int index = x + y * mWidth;
+			for(var x = 0; x < mWidth; ++x) {
+				var fx = (x - 1f) / mWidth;
+				var index = x + y * mWidth;
 				cols[index] = Sample(fx, fy);
 			}
 		}
@@ -74,40 +67,38 @@ public class UIColorPicker : MonoBehaviour
 		Select(value);
 	}
 
-	void OnDestroy ()
-	{
+	private void OnDestroy() {
 		Destroy(mTex);
 		mTex = null;
 	}
 
-	void OnPress (bool pressed) { if (enabled && pressed && UICamera.currentScheme != UICamera.ControlScheme.Controller) Sample(); }
-	void OnDrag (Vector2 delta) { if (enabled) Sample(); }
-	void OnPan (Vector2 delta)
-	{
-		if (enabled)
-		{
+	private void OnPress(bool pressed) {
+		if(enabled && pressed && UICamera.currentScheme != UICamera.ControlScheme.Controller) Sample();
+	}
+
+	private void OnDrag(Vector2 delta) {
+		if(enabled) Sample();
+	}
+
+	private void OnPan(Vector2 delta) {
+		if(enabled) {
 			mPos.x = Mathf.Clamp01(mPos.x + delta.x);
 			mPos.y = Mathf.Clamp01(mPos.y + delta.y);
 			Select(mPos);
 		}
 	}
 
-	/// <summary>
-	/// Sample the color under the current event position.
-	/// </summary>
-
-	void Sample ()
-	{
+	/// <summary>Sample the color under the current event position.</summary>
+	private void Sample() {
 		Vector3 pos = UICamera.lastEventPosition;
 		pos = mCam.cachedCamera.ScreenToWorldPoint(pos);
 
 		pos = mTrans.InverseTransformPoint(pos);
-		Vector3[] corners = mUITex.localCorners;
+		var corners = mUITex.localCorners;
 		mPos.x = Mathf.Clamp01((pos.x - corners[0].x) / (corners[2].x - corners[0].x));
 		mPos.y = Mathf.Clamp01((pos.y - corners[0].y) / (corners[2].y - corners[0].y));
 
-		if (selectionWidget != null)
-		{
+		if(selectionWidget != null) {
 			pos.x = Mathf.Lerp(corners[0].x, corners[2].x, mPos.x);
 			pos.y = Mathf.Lerp(corners[0].y, corners[2].y, mPos.y);
 			pos = mTrans.TransformPoint(pos);
@@ -120,19 +111,14 @@ public class UIColorPicker : MonoBehaviour
 		current = null;
 	}
 
-	/// <summary>
-	/// Select the color under the specified relative coordinate.
-	/// </summary>
-
-	public void Select (Vector2 v)
-	{
+	/// <summary>Select the color under the specified relative coordinate.</summary>
+	public void Select(Vector2 v) {
 		v.x = Mathf.Clamp01(v.x);
 		v.y = Mathf.Clamp01(v.y);
 		mPos = v;
 
-		if (selectionWidget != null)
-		{
-			Vector3[] corners = mUITex.localCorners;
+		if(selectionWidget != null) {
+			var corners = mUITex.localCorners;
 			v.x = Mathf.Lerp(corners[0].x, corners[2].x, mPos.x);
 			v.y = Mathf.Lerp(corners[0].y, corners[2].y, mPos.y);
 			v = mTrans.TransformPoint(v);
@@ -145,36 +131,28 @@ public class UIColorPicker : MonoBehaviour
 		current = null;
 	}
 
-	/// <summary>
-	/// Select the specified color.
-	/// </summary>
-
-	public Vector2 Select (Color c)
-	{
-		if (mUITex == null)
-		{
+	/// <summary>Select the specified color.</summary>
+	public Vector2 Select(Color c) {
+		if(mUITex == null) {
 			value = c;
 			return mPos;
 		}
 
-		float closest = float.MaxValue;
+		var closest = float.MaxValue;
 
-		for (int y = 0; y < mHeight; ++y)
-		{
-			float fy = (y - 1f) / mHeight;
+		for(var y = 0; y < mHeight; ++y) {
+			var fy = (y - 1f) / mHeight;
 
-			for (int x = 0; x < mWidth; ++x)
-			{
-				float fx = (x - 1f) / mWidth;
-				Color sam = Sample(fx, fy);
-				Color sc = sam;
+			for(var x = 0; x < mWidth; ++x) {
+				var fx = (x - 1f) / mWidth;
+				var sam = Sample(fx, fy);
+				var sc = sam;
 				sc.r -= c.r;
 				sc.g -= c.g;
 				sc.b -= c.b;
-				float dot = sc.r * sc.r + sc.g * sc.g + sc.b * sc.b;
-				
-				if (dot < closest)
-				{
+				var dot = sc.r * sc.r + sc.g * sc.g + sc.b * sc.b;
+
+				if(dot < closest) {
 					closest = dot;
 					mPos.x = fx;
 					mPos.y = fy;
@@ -182,9 +160,8 @@ public class UIColorPicker : MonoBehaviour
 			}
 		}
 
-		if (selectionWidget != null)
-		{
-			Vector3[] corners = mUITex.localCorners;
+		if(selectionWidget != null) {
+			var corners = mUITex.localCorners;
 			Vector3 pos;
 			pos.x = Mathf.Lerp(corners[0].x, corners[2].x, mPos.x);
 			pos.y = Mathf.Lerp(corners[0].y, corners[2].y, mPos.y);
@@ -201,68 +178,31 @@ public class UIColorPicker : MonoBehaviour
 		return mPos;
 	}
 
-	static AnimationCurve mRed;
-	static AnimationCurve mGreen;
-	static AnimationCurve mBlue;
+	private static AnimationCurve mRed;
+	private static AnimationCurve mGreen;
+	private static AnimationCurve mBlue;
 
-	/// <summary>
-	/// Choose a color, given X and Y in 0-1 range.
-	/// </summary>
+	/// <summary>Choose a color, given X and Y in 0-1 range.</summary>
+	public static Color Sample(float x, float y) {
+		if(mRed == null) {
+			mRed = new AnimationCurve(new Keyframe(0f, 1f), new Keyframe(1f / 7f, 1f), new Keyframe(2f / 7f, 0f), new Keyframe(3f / 7f, 0f), new Keyframe(4f / 7f, 0f), new Keyframe(5f / 7f, 1f), new Keyframe(6f / 7f, 1f), new Keyframe(1f, 0.5f));
 
-	static public Color Sample (float x, float y)
-	{
-		if (mRed == null)
-		{
-			mRed = new AnimationCurve(
-				new Keyframe[]
-				{
-					new Keyframe(0f, 1f),		// Red
-					new Keyframe(1f / 7f, 1f),	// Yellow
-					new Keyframe(2f / 7f, 0f),	// Green
-					new Keyframe(3f / 7f, 0f),	// Cyan
-					new Keyframe(4f / 7f, 0f),	// Blue
-					new Keyframe(5f / 7f, 1f),	// Magenta
-					new Keyframe(6f / 7f, 1f),	// Red
-					new Keyframe(1f, 0.5f),		// Gray
-				});
+			mGreen = new AnimationCurve(new Keyframe(0f, 0f), new Keyframe(1f / 7f, 1f), new Keyframe(2f / 7f, 1f), new Keyframe(3f / 7f, 1f), new Keyframe(4f / 7f, 0f), new Keyframe(5f / 7f, 0f), new Keyframe(6f / 7f, 0f), new Keyframe(1f, 0.5f));
 
-			mGreen = new AnimationCurve(
-				new Keyframe[]
-				{
-					new Keyframe(0f, 0f),		// Red
-					new Keyframe(1f / 7f, 1f),	// Yellow
-					new Keyframe(2f / 7f, 1f),	// Green
-					new Keyframe(3f / 7f, 1f),	// Cyan
-					new Keyframe(4f / 7f, 0f),	// Blue
-					new Keyframe(5f / 7f, 0f),	// Magenta
-					new Keyframe(6f / 7f, 0f),	// Red
-					new Keyframe(1f, 0.5f),		// Gray
-				});
-
-			mBlue = new AnimationCurve(
-				new Keyframe[]
-				{
-					new Keyframe(0f, 0f),		// Red
-					new Keyframe(1f / 7f, 0f),	// Yellow
-					new Keyframe(2f / 7f, 0f),	// Green
-					new Keyframe(3f / 7f, 1f),	// Cyan
-					new Keyframe(4f / 7f, 1f),	// Blue
-					new Keyframe(5f / 7f, 1f),	// Magenta
-					new Keyframe(6f / 7f, 0f),	// Red
-					new Keyframe(1f, 0.5f),		// Gray
-				});
+			mBlue = new AnimationCurve(new Keyframe(0f, 0f), new Keyframe(1f / 7f, 0f), new Keyframe(2f / 7f, 0f), new Keyframe(3f / 7f, 1f), new Keyframe(4f / 7f, 1f), new Keyframe(5f / 7f, 1f), new Keyframe(6f / 7f, 0f), new Keyframe(1f, 0.5f));
 		}
 
-		Vector3 v = new Vector3(mRed.Evaluate(x), mGreen.Evaluate(x), mBlue.Evaluate(x));
+		var v = new Vector3(mRed.Evaluate(x), mGreen.Evaluate(x), mBlue.Evaluate(x));
 
-		if (y < 0.5f)
-		{
+		if(y < 0.5f) {
 			y *= 2f;
 			v.x *= y;
 			v.y *= y;
 			v.z *= y;
 		}
-		else v = Vector3.Lerp(v, Vector3.one, y * 2f - 1f);
+		else {
+			v = Vector3.Lerp(v, Vector3.one, y * 2f - 1f);
+		}
 		return new Color(v.x, v.y, v.z, 1f);
 	}
 }

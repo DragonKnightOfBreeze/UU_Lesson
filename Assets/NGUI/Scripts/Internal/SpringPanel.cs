@@ -5,104 +5,73 @@
 
 using UnityEngine;
 
-/// <summary>
-/// Similar to SpringPosition, but also moves the panel's clipping. Works in local coordinates.
-/// </summary>
-
+/// <summary>Similar to SpringPosition, but also moves the panel's clipping. Works in local coordinates.</summary>
 [RequireComponent(typeof(UIPanel))]
 [AddComponentMenu("NGUI/Internal/Spring Panel")]
-public class SpringPanel : MonoBehaviour
-{
-	static public SpringPanel current;
+public class SpringPanel : MonoBehaviour {
+	public static SpringPanel current;
 
-	/// <summary>
-	/// Target position to spring the panel to.
-	/// </summary>
-
+	/// <summary>Target position to spring the panel to.</summary>
 	public Vector3 target = Vector3.zero;
 
-	/// <summary>
-	/// Strength of the spring. The higher the value, the faster the movement.
-	/// </summary>
-
+	/// <summary>Strength of the spring. The higher the value, the faster the movement.</summary>
 	public float strength = 10f;
 
-	public delegate void OnFinished ();
+	public delegate void OnFinished();
 
-	/// <summary>
-	/// Delegate function to call when the operation finishes.
-	/// </summary>
-
+	/// <summary>Delegate function to call when the operation finishes.</summary>
 	public OnFinished onFinished;
 
-	UIPanel mPanel;
-	Transform mTrans;
-	UIScrollView mDrag;
+	private UIPanel mPanel;
+	private Transform mTrans;
+	private UIScrollView mDrag;
 
-	/// <summary>
-	/// Cache the transform.
-	/// </summary>
-
-	void Start ()
-	{
+	/// <summary>Cache the transform.</summary>
+	private void Start() {
 		mPanel = GetComponent<UIPanel>();
 		mDrag = GetComponent<UIScrollView>();
 		mTrans = transform;
 	}
 
-	/// <summary>
-	/// Advance toward the target position.
-	/// </summary>
-
-	void Update ()
-	{
-	    AdvanceTowardsPosition();
+	/// <summary>Advance toward the target position.</summary>
+	private void Update() {
+		AdvanceTowardsPosition();
 	}
 
-    /// <summary>
-    /// Advance toward the target position.
-	/// </summary>
+	/// <summary>Advance toward the target position.</summary>
+	protected virtual void AdvanceTowardsPosition() {
+		var delta = RealTime.deltaTime;
 
-	protected virtual void AdvanceTowardsPosition ()
-	{
-		float delta = RealTime.deltaTime;
+		var trigger = false;
+		var before = mTrans.localPosition;
+		var after = NGUIMath.SpringLerp(mTrans.localPosition, target, strength, delta);
 
-		bool trigger = false;
-		Vector3 before = mTrans.localPosition;
-		Vector3 after = NGUIMath.SpringLerp(mTrans.localPosition, target, strength, delta);
-
-		if ((after - target).sqrMagnitude < 0.01f)
-		{
+		if((after - target).sqrMagnitude < 0.01f) {
 			after = target;
 			enabled = false;
 			trigger = true;
 		}
 		mTrans.localPosition = after;
 
-		Vector3 offset = after - before;
-		Vector2 cr = mPanel.clipOffset;
+		var offset = after - before;
+		var cr = mPanel.clipOffset;
 		cr.x -= offset.x;
 		cr.y -= offset.y;
 		mPanel.clipOffset = cr;
 
-		if (mDrag != null) mDrag.UpdateScrollbars(false);
+		if(mDrag != null) mDrag.UpdateScrollbars(false);
 
-		if (trigger && onFinished != null)
-		{
+		if(trigger && onFinished != null) {
 			current = this;
 			onFinished();
 			current = null;
 		}
-    }
+	}
 
-	/// <summary>
-	/// Start the tweening process.
-	/// </summary>
-
-	static public SpringPanel Begin (GameObject go, Vector3 pos, float strength)
-	{
-		SpringPanel sp = go.GetComponent<SpringPanel>();
-		if (sp == null) sp = go.AddComponent<SpringPanel>();
+	/// <summary>Start the tweening process.</summary>
+	public static SpringPanel Begin(GameObject go, Vector3 pos, float strength) {
+		var sp = go.GetComponent<SpringPanel>();
+		if(sp == null) sp = go.AddComponent<SpringPanel>();
 		sp.target = pos;
 		sp.strength = strength;
 		sp.onFinished = null;

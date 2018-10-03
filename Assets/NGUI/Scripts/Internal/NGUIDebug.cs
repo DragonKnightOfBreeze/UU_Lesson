@@ -6,128 +6,87 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-/// <summary>
-/// This class is meant to be used only internally. It's like Debug.Log, but prints using OnGUI to screen instead.
-/// </summary>
-
+/// <summary>This class is meant to be used only internally. It's like Debug.Log, but prints using OnGUI to screen instead.</summary>
 [AddComponentMenu("NGUI/Internal/Debug")]
-public class NGUIDebug : MonoBehaviour
-{
-	static bool mRayDebug = false;
-	static List<string> mLines = new List<string>();
-	static NGUIDebug mInstance = null;
+public class NGUIDebug : MonoBehaviour {
+	private static bool mRayDebug;
+	private static readonly List<string> mLines = new List<string>();
+	private static NGUIDebug mInstance;
 
-	/// <summary>
-	/// Set by UICamera. Can be used to show/hide raycast information.
-	/// </summary>
+	/// <summary>Set by UICamera. Can be used to show/hide raycast information.</summary>
 
-	static public bool debugRaycast
-	{
-		get
-		{
-			return mRayDebug;
-		}
-		set
-		{
+	public static bool debugRaycast {
+		get { return mRayDebug; }
+		set {
 			mRayDebug = value;
-			if (value && Application.isPlaying)
+			if(value && Application.isPlaying)
 				CreateInstance();
 		}
 	}
 
-	/// <summary>
-	/// Ensure we have an instance present.
-	/// </summary>
-
-	static public void CreateInstance ()
-	{
-		if (mInstance == null)
-		{
-			GameObject go = new GameObject("_NGUI Debug");
+	/// <summary>Ensure we have an instance present.</summary>
+	public static void CreateInstance() {
+		if(mInstance == null) {
+			var go = new GameObject("_NGUI Debug");
 			mInstance = go.AddComponent<NGUIDebug>();
 			DontDestroyOnLoad(go);
 		}
 	}
 
-	/// <summary>
-	/// Add a new on-screen log entry.
-	/// </summary>
-
-	static void LogString (string text)
-	{
-		if (Application.isPlaying)
-		{
-			if (mLines.Count > 20) mLines.RemoveAt(0);
+	/// <summary>Add a new on-screen log entry.</summary>
+	private static void LogString(string text) {
+		if(Application.isPlaying) {
+			if(mLines.Count > 20) mLines.RemoveAt(0);
 			mLines.Add(text);
 			CreateInstance();
 		}
-		else Debug.Log(text);
+		else {
+			Debug.Log(text);
+		}
 	}
 
-	/// <summary>
-	/// Add a new log entry, printing all of the specified parameters.
-	/// </summary>
+	/// <summary>Add a new log entry, printing all of the specified parameters.</summary>
+	public static void Log(params object[] objs) {
+		var text = "";
 
-	static public void Log (params object[] objs)
-	{
-		string text = "";
-
-		for (int i = 0; i < objs.Length; ++i)
-		{
-			if (i == 0)
-			{
+		for(var i = 0; i < objs.Length; ++i)
+			if(i == 0)
 				text += objs[i].ToString();
-			}
 			else
-			{
-				text += ", " + objs[i].ToString();
-			}
-		}
+				text += ", " + objs[i];
 		LogString(text);
 	}
 
-	/// <summary>
-	/// Add a new log entry.
-	/// </summary>
-
-	static public void Log (string s)
-	{
-		if (!string.IsNullOrEmpty(s))
-		{
-			string[] lines = s.Split('\n');
-			foreach (string st in lines) LogString(st);
+	/// <summary>Add a new log entry.</summary>
+	public static void Log(string s) {
+		if(!string.IsNullOrEmpty(s)) {
+			var lines = s.Split('\n');
+			foreach(var st in lines) LogString(st);
 		}
 	}
 
-	/// <summary>
-	/// Clear the logged text.
-	/// </summary>
+	/// <summary>Clear the logged text.</summary>
+	public static void Clear() {
+		mLines.Clear();
+	}
 
-	static public void Clear () { mLines.Clear(); }
-
-	/// <summary>
-	/// Draw bounds immediately. Won't be remembered for the next frame.
-	/// </summary>
-
-	static public void DrawBounds (Bounds b)
-	{
-		Vector3 c = b.center;
-		Vector3 v0 = b.center - b.extents;
-		Vector3 v1 = b.center + b.extents;
+	/// <summary>Draw bounds immediately. Won't be remembered for the next frame.</summary>
+	public static void DrawBounds(Bounds b) {
+		var c = b.center;
+		var v0 = b.center - b.extents;
+		var v1 = b.center + b.extents;
 		Debug.DrawLine(new Vector3(v0.x, v0.y, c.z), new Vector3(v1.x, v0.y, c.z), Color.red);
 		Debug.DrawLine(new Vector3(v0.x, v0.y, c.z), new Vector3(v0.x, v1.y, c.z), Color.red);
 		Debug.DrawLine(new Vector3(v1.x, v0.y, c.z), new Vector3(v1.x, v1.y, c.z), Color.red);
 		Debug.DrawLine(new Vector3(v0.x, v1.y, c.z), new Vector3(v1.x, v1.y, c.z), Color.red);
 	}
 
-	void OnGUI()
-	{
-		Rect rect = new Rect(5f, 5f, 1000f, 22f);
+	private void OnGUI() {
+		var rect = new Rect(5f, 5f, 1000f, 22f);
 
-		if (mRayDebug)
-		{
-			UICamera.ControlScheme scheme = UICamera.currentScheme;
-			string text = "Scheme: " + scheme;
+		if(mRayDebug) {
+			var scheme = UICamera.currentScheme;
+			var text = "Scheme: " + scheme;
 			GUI.color = Color.black;
 			GUI.Label(rect, text);
 			rect.y -= 1f;
@@ -168,9 +127,9 @@ public class NGUIDebug : MonoBehaviour
 			rect.x += 1f;
 
 			text = "Active events: " + UICamera.CountInputSources();
-			if (UICamera.disableController) text += ", disabled controller";
-			if (UICamera.ignoreControllerInput) text += ", ignore controller";
-			if (UICamera.inputHasFocus) text += ", input focus";
+			if(UICamera.disableController) text += ", disabled controller";
+			if(UICamera.ignoreControllerInput) text += ", ignore controller";
+			if(UICamera.inputHasFocus) text += ", input focus";
 			GUI.color = Color.black;
 			GUI.Label(rect, text);
 			rect.y -= 1f;
@@ -181,8 +140,7 @@ public class NGUIDebug : MonoBehaviour
 			rect.x += 1f;
 		}
 
-		for (int i = 0, imax = mLines.Count; i < imax; ++i)
-		{
+		for(int i = 0, imax = mLines.Count; i < imax; ++i) {
 			GUI.color = Color.black;
 			GUI.Label(rect, mLines[i]);
 			rect.y -= 1f;

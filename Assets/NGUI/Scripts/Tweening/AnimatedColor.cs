@@ -5,18 +5,20 @@
 
 using UnityEngine;
 
-/// <summary>
-/// Makes it possible to animate a color of the widget.
-/// </summary>
-
+/// <summary>Makes it possible to animate a color of the widget.</summary>
 [ExecuteInEditMode]
 [RequireComponent(typeof(UIWidget))]
-public class AnimatedColor : MonoBehaviour
-{
+public class AnimatedColor : MonoBehaviour {
 	public Color color = Color.white;
-	
-	UIWidget mWidget;
 
-	void OnEnable () { mWidget = GetComponent<UIWidget>(); LateUpdate(); }
-	void LateUpdate () { mWidget.color = color; }
+	private UIWidget mWidget;
+
+	private void OnEnable() {
+		mWidget = GetComponent<UIWidget>();
+		LateUpdate();
+	}
+
+	private void LateUpdate() {
+		mWidget.color = color;
+	}
 }

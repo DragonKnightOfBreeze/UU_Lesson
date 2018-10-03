@@ -642,8 +642,9 @@ public class UIAtlasMaker : EditorWindow
 	{
 		if (atlas != null && tex != null)
 		{
-			List<Texture> textures = new List<Texture>();
-			textures.Add(tex);
+			List<Texture> textures = new List<Texture> {
+				tex
+			};
 			List<SpriteEntry> sprites = CreateSprites(textures);
 			ExtractSprites(atlas, sprites);
 			UpdateAtlas(atlas, sprites);

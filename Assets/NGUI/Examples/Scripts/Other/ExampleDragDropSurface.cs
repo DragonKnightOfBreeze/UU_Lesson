@@ -6,14 +6,12 @@
 using UnityEngine;
 
 /// <summary>
-/// Simple example of an OnDrop event accepting a game object. In this case we check to see if there is a DragDropObject present,
-/// and if so -- create its prefab on the surface, then destroy the object.
+///     Simple example of an OnDrop event accepting a game object. In this case we check to see if there is a
+///     DragDropObject present, and if so -- create its prefab on the surface, then destroy the object.
 /// </summary>
-
 [AddComponentMenu("NGUI/Examples/Drag and Drop Surface (Example)")]
-public class ExampleDragDropSurface : MonoBehaviour
-{
-	public bool rotatePlacedObject = false;
+public class ExampleDragDropSurface : MonoBehaviour {
+	public bool rotatePlacedObject;
 
 	//void OnDrop (GameObject go)
 	//{

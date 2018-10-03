@@ -6,8 +6,8 @@
 using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
-using UnityEditorInternal;
 using System.Reflection;
+using UnityEditorInternal;
 
 /// <summary>
 /// Editor class used to view panels.

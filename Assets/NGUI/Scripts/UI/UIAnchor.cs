@@ -5,16 +5,11 @@
 
 using UnityEngine;
 
-/// <summary>
-/// This script can be used to anchor an object to the side or corner of the screen, panel, or a widget.
-/// </summary>
-
+/// <summary>This script can be used to anchor an object to the side or corner of the screen, panel, or a widget.</summary>
 [ExecuteInEditMode]
 [AddComponentMenu("NGUI/UI/Anchor")]
-public class UIAnchor : MonoBehaviour
-{
-	public enum Side
-	{
+public class UIAnchor : MonoBehaviour {
+	public enum Side {
 		BottomLeft,
 		Left,
 		TopLeft,
@@ -23,58 +18,48 @@ public class UIAnchor : MonoBehaviour
 		Right,
 		BottomRight,
 		Bottom,
-		Center,
+		Center
 	}
 
-	/// <summary>
-	/// Camera used to determine the anchor bounds. Set automatically if none was specified.
-	/// </summary>
-
-	public Camera uiCamera = null;
+	/// <summary>Camera used to determine the anchor bounds. Set automatically if none was specified.</summary>
+	public Camera uiCamera;
 
 	/// <summary>
-	/// Object used to determine the container's bounds. Overwrites the camera-based anchoring if the value was specified.
+	///     Object used to determine the container's bounds. Overwrites the camera-based anchoring if the value was
+	///     specified.
 	/// </summary>
+	public GameObject container;
 
-	public GameObject container = null;
-
-	/// <summary>
-	/// Side or corner to anchor to.
-	/// </summary>
-
+	/// <summary>Side or corner to anchor to.</summary>
 	public Side side = Side.Center;
 
 	/// <summary>
-	/// If set to 'true', UIAnchor will execute once, then will be disabled.
-	/// Screen size changes will still cause the anchor to update itself, even if it's disabled.
+	///     If set to 'true', UIAnchor will execute once, then will be disabled. Screen size changes will still cause the
+	///     anchor to update itself, even if it's disabled.
 	/// </summary>
-
 	public bool runOnlyOnce = true;
 
-	/// <summary>
-	/// Relative offset value, if any. For example "0.25" with 'side' set to Left, means 25% from the left side.
-	/// </summary>
-
+	/// <summary>Relative offset value, if any. For example "0.25" with 'side' set to Left, means 25% from the left side.</summary>
 	public Vector2 relativeOffset = Vector2.zero;
-	
+
 	/// <summary>
-	/// Pixel offset value if any. For example "10" in x will move the widget 10 pixels to the right 
-	/// while "-10" in x is 10 pixels to the left based on the pixel values set in UIRoot.
+	///     Pixel offset value if any. For example "10" in x will move the widget 10 pixels to the right while "-10" in x
+	///     is 10 pixels to the left based on the pixel values set in UIRoot.
 	/// </summary>
-	
 	public Vector2 pixelOffset = Vector2.zero;
 
 	// Deprecated legacy functionality
-	[HideInInspector][SerializeField] UIWidget widgetContainer;
+	[HideInInspector]
+	[SerializeField]
+	private UIWidget widgetContainer;
 
-	Transform mTrans;
-	Animation mAnim;
-	Rect mRect = new Rect();
-	UIRoot mRoot;
-	bool mStarted = false;
+	private Transform mTrans;
+	private Animation mAnim;
+	private Rect mRect;
+	private UIRoot mRoot;
+	private bool mStarted;
 
-	void OnEnable ()
-	{
+	private void OnEnable() {
 		mTrans = transform;
 #if UNITY_4_3 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7
 		mAnim = animation;
@@ -84,18 +69,17 @@ public class UIAnchor : MonoBehaviour
 		UICamera.onScreenResize += ScreenSizeChanged;
 	}
 
-	void OnDisable () { UICamera.onScreenResize -= ScreenSizeChanged; }
+	private void OnDisable() {
+		UICamera.onScreenResize -= ScreenSizeChanged;
+	}
 
-	void ScreenSizeChanged () { if (mStarted && runOnlyOnce) Update(); }
+	private void ScreenSizeChanged() {
+		if(mStarted && runOnlyOnce) Update();
+	}
 
-	/// <summary>
-	/// Automatically find the camera responsible for drawing the widgets under this object.
-	/// </summary>
-
-	void Start ()
-	{
-		if (container == null && widgetContainer != null)
-		{
+	/// <summary>Automatically find the camera responsible for drawing the widgets under this object.</summary>
+	private void Start() {
+		if(container == null && widgetContainer != null) {
 			container = widgetContainer.gameObject;
 			widgetContainer = null;
 #if UNITY_EDITOR
@@ -104,30 +88,25 @@ public class UIAnchor : MonoBehaviour
 		}
 
 		mRoot = NGUITools.FindInParents<UIRoot>(gameObject);
-		if (uiCamera == null) uiCamera = NGUITools.FindCameraForLayer(gameObject.layer);
-		
+		if(uiCamera == null) uiCamera = NGUITools.FindCameraForLayer(gameObject.layer);
+
 		Update();
 
 		mStarted = true;
 	}
 
-	/// <summary>
-	/// Anchor the object to the appropriate point.
-	/// </summary>
+	/// <summary>Anchor the object to the appropriate point.</summary>
+	private void Update() {
+		if(mAnim != null && mAnim.enabled && mAnim.isPlaying) return;
+		if(mTrans == null) return;
 
-	void Update ()
-	{
-		if (mAnim != null && mAnim.enabled && mAnim.isPlaying) return;
-		if (mTrans == null) return;
+		var useCamera = false;
 
-		bool useCamera = false;
+		var wc = container == null ? null : container.GetComponent<UIWidget>();
+		var pc = container == null && wc == null ? null : container.GetComponent<UIPanel>();
 
-		UIWidget wc = (container == null) ? null : container.GetComponent<UIWidget>();
-		UIPanel pc = (container == null && wc == null) ? null : container.GetComponent<UIPanel>();
-
-		if (wc != null)
-		{
-			Bounds b = wc.CalculateBounds(container.transform.parent);
+		if(wc != null) {
+			var b = wc.CalculateBounds(container.transform.parent);
 
 			mRect.x = b.min.x;
 			mRect.y = b.min.y;
@@ -135,32 +114,27 @@ public class UIAnchor : MonoBehaviour
 			mRect.width = b.size.x;
 			mRect.height = b.size.y;
 		}
-		else if (pc != null)
-		{
-			if (pc.clipping == UIDrawCall.Clipping.None)
-			{
+		else if(pc != null) {
+			if(pc.clipping == UIDrawCall.Clipping.None) {
 				// Panel has no clipping -- just use the screen's dimensions
-				float ratio = (mRoot != null) ? (float)mRoot.activeHeight / Screen.height * 0.5f : 0.5f;
+				var ratio = mRoot != null ? (float) mRoot.activeHeight / Screen.height * 0.5f : 0.5f;
 				mRect.xMin = -Screen.width * ratio;
 				mRect.yMin = -Screen.height * ratio;
 				mRect.xMax = -mRect.xMin;
 				mRect.yMax = -mRect.yMin;
 			}
-			else
-			{
+			else {
 				// Panel has clipping -- use it as the mRect
-				Vector4 pos = pc.finalClipRegion;
-				mRect.x = pos.x - (pos.z * 0.5f);
-				mRect.y = pos.y - (pos.w * 0.5f);
+				var pos = pc.finalClipRegion;
+				mRect.x = pos.x - pos.z * 0.5f;
+				mRect.y = pos.y - pos.w * 0.5f;
 				mRect.width = pos.z;
 				mRect.height = pos.w;
 			}
 		}
-		else if (container != null)
-		{
-			Transform root = container.transform.parent;
-			Bounds b = (root != null) ? NGUIMath.CalculateRelativeWidgetBounds(root, container.transform) :
-				NGUIMath.CalculateRelativeWidgetBounds(container.transform);
+		else if(container != null) {
+			var root = container.transform.parent;
+			var b = root != null ? NGUIMath.CalculateRelativeWidgetBounds(root, container.transform) : NGUIMath.CalculateRelativeWidgetBounds(container.transform);
 
 			mRect.x = b.min.x;
 			mRect.y = b.min.y;
@@ -168,38 +142,36 @@ public class UIAnchor : MonoBehaviour
 			mRect.width = b.size.x;
 			mRect.height = b.size.y;
 		}
-		else if (uiCamera != null)
-		{
+		else if(uiCamera != null) {
 			useCamera = true;
 			mRect = uiCamera.pixelRect;
 		}
-		else return;
+		else {
+			return;
+		}
 
-		float cx = (mRect.xMin + mRect.xMax) * 0.5f;
-		float cy = (mRect.yMin + mRect.yMax) * 0.5f;
-		Vector3 v = new Vector3(cx, cy, 0f);
+		var cx = (mRect.xMin + mRect.xMax) * 0.5f;
+		var cy = (mRect.yMin + mRect.yMax) * 0.5f;
+		var v = new Vector3(cx, cy, 0f);
 
-		if (side != Side.Center)
-		{
-			if (side == Side.Right || side == Side.TopRight || side == Side.BottomRight) v.x = mRect.xMax;
-			else if (side == Side.Top || side == Side.Center || side == Side.Bottom) v.x = cx;
+		if(side != Side.Center) {
+			if(side == Side.Right || side == Side.TopRight || side == Side.BottomRight) v.x = mRect.xMax;
+			else if(side == Side.Top || side == Side.Center || side == Side.Bottom) v.x = cx;
 			else v.x = mRect.xMin;
 
-			if (side == Side.Top || side == Side.TopRight || side == Side.TopLeft) v.y = mRect.yMax;
-			else if (side == Side.Left || side == Side.Center || side == Side.Right) v.y = cy;
+			if(side == Side.Top || side == Side.TopRight || side == Side.TopLeft) v.y = mRect.yMax;
+			else if(side == Side.Left || side == Side.Center || side == Side.Right) v.y = cy;
 			else v.y = mRect.yMin;
 		}
 
-		float width = mRect.width;
-		float height = mRect.height;
+		var width = mRect.width;
+		var height = mRect.height;
 
 		v.x += pixelOffset.x + relativeOffset.x * width;
 		v.y += pixelOffset.y + relativeOffset.y * height;
 
-		if (useCamera)
-		{
-			if (uiCamera.orthographic)
-			{
+		if(useCamera) {
+			if(uiCamera.orthographic) {
 				v.x = Mathf.Round(v.x);
 				v.y = Mathf.Round(v.y);
 			}
@@ -207,19 +179,16 @@ public class UIAnchor : MonoBehaviour
 			v.z = uiCamera.WorldToScreenPoint(mTrans.position).z;
 			v = uiCamera.ScreenToWorldPoint(v);
 		}
-		else
-		{
+		else {
 			v.x = Mathf.Round(v.x);
 			v.y = Mathf.Round(v.y);
 
-			if (pc != null)
-			{
+			if(pc != null) {
 				v = pc.cachedTransform.TransformPoint(v);
 			}
-			else if (container != null)
-			{
-				Transform t = container.transform.parent;
-				if (t != null) v = t.TransformPoint(v);
+			else if(container != null) {
+				var t = container.transform.parent;
+				if(t != null) v = t.TransformPoint(v);
 			}
 			v.z = mTrans.position.z;
 		}
@@ -228,15 +197,17 @@ public class UIAnchor : MonoBehaviour
 #if UNITY_4_3 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7
 		if (useCamera && uiCamera.isOrthoGraphic && mTrans.parent != null)
 #else
-		if (useCamera && uiCamera.orthographic && mTrans.parent != null)
-#endif
+		if(useCamera && uiCamera.orthographic && mTrans.parent != null)
+#endif 
 		{
 			v = mTrans.parent.InverseTransformPoint(v);
 			v.x = Mathf.RoundToInt(v.x);
 			v.y = Mathf.RoundToInt(v.y);
-			if (mTrans.localPosition != v) mTrans.localPosition = v;
+			if(mTrans.localPosition != v) mTrans.localPosition = v;
 		}
-		else if (mTrans.position != v) mTrans.position = v;
-		if (runOnlyOnce && Application.isPlaying) enabled = false;
+		else if(mTrans.position != v) {
+			mTrans.position = v;
+		}
+		if(runOnlyOnce && Application.isPlaying) enabled = false;
 	}
 }

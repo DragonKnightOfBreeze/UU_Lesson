@@ -6,29 +6,27 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-/// <summary>
-/// Attaching this script to a label will make the label's letters animate.
-/// </summary>
+/// <summary>Attaching this script to a label will make the label's letters animate.</summary>
+public class TweenLetters : UITweener {
+	public enum AnimationLetterOrder {
+		Forward,
+		Reverse,
+		Random
+	}
 
-public class TweenLetters : UITweener
-{
-	public enum AnimationLetterOrder { Forward, Reverse, Random }
-
-	class LetterProperties
-	{
+	private class LetterProperties {
 		public float start;
 		public float duration; // if RandomDurations is set, these will all be different.
 		public Vector2 offset;
 	}
 
 	[System.Serializable]
-	public class AnimationProperties
-	{
+	public class AnimationProperties {
 		public AnimationLetterOrder animationOrder = AnimationLetterOrder.Random;
 		[Range(0f, 1f)]
 		public float overlap = 0.5f;
 
-		public bool randomDurations = false;
+		public bool randomDurations;
 		[MinMaxRange(0f, 1f)]
 		public Vector2 randomness = new Vector2(0.25f, 0.75f);
 
@@ -42,41 +40,36 @@ public class TweenLetters : UITweener
 	public AnimationProperties hoverOver;
 	public AnimationProperties hoverOut;
 
-	UILabel mLabel;
-	int mVertexCount = -1;
-	int[] mLetterOrder;
-	LetterProperties[] mLetter;
-	AnimationProperties mCurrent;
+	private UILabel mLabel;
+	private int mVertexCount = -1;
+	private int[] mLetterOrder;
+	private LetterProperties[] mLetter;
+	private AnimationProperties mCurrent;
 
-	void OnEnable ()
-	{
+	private void OnEnable() {
 		mVertexCount = -1;
 		mLabel.onPostFill += OnPostFill;
 	}
 
-	void OnDisable ()
-	{
+	private void OnDisable() {
 		mLabel.onPostFill -= OnPostFill;
 	}
 
-	void Awake ()
-	{
+	private void Awake() {
 		mLabel = GetComponent<UILabel>();
 		mCurrent = hoverOver;
 	}
 
-	public override void Play (bool forward)
-	{
-		mCurrent = (forward) ? hoverOver : hoverOut;
+	public override void Play(bool forward) {
+		mCurrent = forward ? hoverOver : hoverOut;
 		base.Play(forward);
 	}
 
-	void OnPostFill (UIWidget widget, int bufferOffset, List<Vector3> verts, List<Vector2> uvs, List<Color> cols)
-	{
-		if (verts == null) return;
+	private void OnPostFill(UIWidget widget, int bufferOffset, List<Vector3> verts, List<Vector2> uvs, List<Color> cols) {
+		if(verts == null) return;
 		var vertexCount = verts.Count;
-		if (verts == null || vertexCount == 0) return;
-		if (mLabel == null) return;
+		if(verts == null || vertexCount == 0) return;
+		if(mLabel == null) return;
 
 #if !UNITY_EDITOR
 		try {
@@ -87,8 +80,7 @@ public class TweenLetters : UITweener
 
 		var pt = mLabel.printedText;
 
-		if (mVertexCount != vertexCount)
-		{
+		if(mVertexCount != vertexCount) {
 			mVertexCount = vertexCount;
 			SetLetterOrder(characterCount);
 			GetLetterDuration(characterCount);
@@ -107,15 +99,12 @@ public class TweenLetters : UITweener
 		var c = Color.clear;
 		var timeIntoAnimation = tweenFactor * duration;
 
-		for (int q = 0; q < quads; ++q)
-		{
-			for (int i = 0; i < characterCount; ++i)
-			{
+		for(var q = 0; q < quads; ++q) {
+			for(var i = 0; i < characterCount; ++i) {
 				letter = mLetterOrder[i]; // Choose which letter to animate.
 				firstVert = q * characterCount * quadVerts + letter * quadVerts;
 
-				if (firstVert >= vertexCount)
-				{
+				if(firstVert >= vertexCount) {
 #if UNITY_EDITOR
 					Debug.LogError("TweenLetters encountered an unhandled case trying to modify a vertex " + firstVert + ". Vertex Count: " + vertexCount + " Pass: " + q + "\nText: " + pt);
 #endif
@@ -142,8 +131,7 @@ public class TweenLetters : UITweener
 #endif
 				mtx.SetTRS(lerpPos, lerpRot, lerpScale);
 
-				for (int iv = firstVert; iv < firstVert + quadVerts; ++iv)
-				{
+				for(var iv = firstVert; iv < firstVert + quadVerts; ++iv) {
 					vert = verts[iv];
 					vert -= letterCenter;
 					vert = mtx.MultiplyPoint3x4(vert);
@@ -173,23 +161,14 @@ public class TweenLetters : UITweener
 	static float LerpUnclamped (float a, float b, float f) { return a + (b - a) * f; }
 #endif
 
-	/// <summary>
-	/// Check every frame to see if the text has changed and mark the label as having been updated.
-	/// </summary>
-	
-	protected override void OnUpdate (float factor, bool isFinished)
-	{
+	/// <summary>Check every frame to see if the text has changed and mark the label as having been updated.</summary>
+	protected override void OnUpdate(float factor, bool isFinished) {
 		mLabel.MarkAsChanged();
 	}
 
-	/// <summary>
-	/// Sets the sequence that the letters are animated in.
-	/// </summary>
-	
-	void SetLetterOrder (int letterCount)
-	{
-		if (letterCount == 0)
-		{
+	/// <summary>Sets the sequence that the letters are animated in.</summary>
+	private void SetLetterOrder(int letterCount) {
+		if(letterCount == 0) {
 			mLetter = null;
 			mLetterOrder = null;
 			return;
@@ -198,62 +177,51 @@ public class TweenLetters : UITweener
 		mLetterOrder = new int[letterCount];
 		mLetter = new LetterProperties[letterCount];
 
-		for (int i = 0; i < letterCount; ++i)
-		{
-			mLetterOrder[i] = (mCurrent.animationOrder == AnimationLetterOrder.Reverse) ? letterCount - 1 - i : i;
+		for(var i = 0; i < letterCount; ++i) {
+			mLetterOrder[i] = mCurrent.animationOrder == AnimationLetterOrder.Reverse ? letterCount - 1 - i : i;
 
-			int current = mLetterOrder[i];
+			var current = mLetterOrder[i];
 			mLetter[current] = new LetterProperties();
 			mLetter[current].offset = new Vector2(Random.Range(-mCurrent.offsetRange.x, mCurrent.offsetRange.x), Random.Range(-mCurrent.offsetRange.y, mCurrent.offsetRange.y));
 		}
 
-		if (mCurrent.animationOrder == AnimationLetterOrder.Random)
-		{
+		if(mCurrent.animationOrder == AnimationLetterOrder.Random) {
 			// Shuffle the numbers in the array.
 			var rng = new System.Random();
-			int n = letterCount;
+			var n = letterCount;
 
-			while (n > 1)
-			{
-				int k = rng.Next(--n + 1);
-				int tmp = mLetterOrder[k];
+			while(n > 1) {
+				var k = rng.Next(--n + 1);
+				var tmp = mLetterOrder[k];
 				mLetterOrder[k] = mLetterOrder[n];
 				mLetterOrder[n] = tmp;
 			}
 		}
 	}
 
-	/// <summary>
-	/// Returns how long each letter has to animate based on the overall duration requested and how much they overlap.
-	/// </summary>
-	
-	void GetLetterDuration (int letterCount)
-	{
-		if (mCurrent.randomDurations)
-		{
-			for (int i = 0; i < mLetter.Length; ++i)
-			{
+	/// <summary>Returns how long each letter has to animate based on the overall duration requested and how much they overlap.</summary>
+	private void GetLetterDuration(int letterCount) {
+		if(mCurrent.randomDurations) {
+			for(var i = 0; i < mLetter.Length; ++i) {
 				mLetter[i].start = Random.Range(0f, mCurrent.randomness.x * duration);
-				float end = Random.Range(mCurrent.randomness.y * duration, duration);
+				var end = Random.Range(mCurrent.randomness.y * duration, duration);
 				mLetter[i].duration = end - mLetter[i].start;
 			}
 		}
-		else
-		{
+		else {
 			// Calculate how long each letter will take to fade in.
-			float lengthPerLetter = duration / letterCount;
-			float flippedOverlap = 1f - mCurrent.overlap;
+			var lengthPerLetter = duration / letterCount;
+			var flippedOverlap = 1f - mCurrent.overlap;
 
 			// Figure out how long the animation will be taking into account overlapping letters.
-			float totalDuration = lengthPerLetter * letterCount * flippedOverlap;
+			var totalDuration = lengthPerLetter * letterCount * flippedOverlap;
 
 			// Scale the smaller total running time back up to the requested animation time.
-			float letterDuration = ScaleRange(lengthPerLetter, totalDuration + lengthPerLetter * mCurrent.overlap, duration);
+			var letterDuration = ScaleRange(lengthPerLetter, totalDuration + lengthPerLetter * mCurrent.overlap, duration);
 
 			float offset = 0;
-			for (int i = 0; i < mLetter.Length; ++i)
-			{
-				int letter = mLetterOrder[i];
+			for(var i = 0; i < mLetter.Length; ++i) {
+				var letter = mLetterOrder[i];
 				mLetter[letter].start = offset;
 				mLetter[letter].duration = letterDuration;
 				offset += mLetter[letter].duration * flippedOverlap;
@@ -261,23 +229,15 @@ public class TweenLetters : UITweener
 		}
 	}
 
-	/// <summary>
-	/// Simplified Scale range function that assumes a minimum of 0 for both ranges.
-	/// </summary>
-
-	float ScaleRange (float value, float baseMax, float limitMax)
-	{
-		return (limitMax * value / baseMax);
+	/// <summary>Simplified Scale range function that assumes a minimum of 0 for both ranges.</summary>
+	private float ScaleRange(float value, float baseMax, float limitMax) {
+		return limitMax * value / baseMax;
 	}
 
-	/// <summary>
-	/// Finds the center point of a series of verts.
-	/// </summary>
-
-	static Vector3 GetCenter (List<Vector3> verts, int firstVert, int length)
-	{
-		Vector3 center = verts[firstVert];
-		for (int v = firstVert + 1; v < firstVert + length; ++v) center += verts[v];
+	/// <summary>Finds the center point of a series of verts.</summary>
+	private static Vector3 GetCenter(List<Vector3> verts, int firstVert, int length) {
+		var center = verts[firstVert];
+		for(var v = firstVert + 1; v < firstVert + length; ++v) center += verts[v];
 		return center / length;
 	}
 }

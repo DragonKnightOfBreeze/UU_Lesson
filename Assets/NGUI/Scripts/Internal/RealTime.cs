@@ -5,12 +5,8 @@
 
 using UnityEngine;
 
-/// <summary>
-/// Time class has no timeScale-independent time. This class fixes that.
-/// </summary>
-
-public class RealTime : MonoBehaviour
-{
+/// <summary>Time class has no timeScale-independent time. This class fixes that.</summary>
+public class RealTime : MonoBehaviour {
 #if UNITY_4_3
 	static RealTime mInst;
 
@@ -64,16 +60,12 @@ public class RealTime : MonoBehaviour
 		mRealTime = rt;
 	}
 #else
-	/// <summary>
-	/// Real time since startup.
-	/// </summary>
+	/// <summary>Real time since startup.</summary>
 
-	static public float time { get { return Time.unscaledTime; } }
+	public static float time => Time.unscaledTime;
 
-	/// <summary>
-	/// Real delta time.
-	/// </summary>
+	/// <summary>Real delta time.</summary>
 
-	static public float deltaTime { get { return Time.unscaledDeltaTime; } }
+	public static float deltaTime => Time.unscaledDeltaTime;
 #endif
 }

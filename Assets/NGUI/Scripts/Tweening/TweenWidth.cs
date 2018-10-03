@@ -5,63 +5,60 @@
 
 using UnityEngine;
 
-/// <summary>
-/// Tween the widget's size.
-/// </summary>
-
+/// <summary>Tween the widget's size.</summary>
 [RequireComponent(typeof(UIWidget))]
 [AddComponentMenu("NGUI/Tween/Tween Width")]
-public class TweenWidth : UITweener
-{
+public class TweenWidth : UITweener {
 	public int from = 100;
 	public int to = 100;
-	public bool updateTable = false;
+	public bool updateTable;
 
-	UIWidget mWidget;
-	UITable mTable;
+	private UIWidget mWidget;
+	private UITable mTable;
 
-	public UIWidget cachedWidget { get { if (mWidget == null) mWidget = GetComponent<UIWidget>(); return mWidget; } }
+	public UIWidget cachedWidget {
+		get {
+			if(mWidget == null) mWidget = GetComponent<UIWidget>();
+			return mWidget;
+		}
+	}
 
 	[System.Obsolete("Use 'value' instead")]
-	public int width { get { return this.value; } set { this.value = value; } }
+	public int width {
+		get { return value; }
+		set { this.value = value; }
+	}
 
-	/// <summary>
-	/// Tween's current value.
-	/// </summary>
+	/// <summary>Tween's current value.</summary>
 
-	public int value { get { return cachedWidget.width; } set { cachedWidget.width = value; } }
+	public int value {
+		get { return cachedWidget.width; }
+		set { cachedWidget.width = value; }
+	}
 
-	/// <summary>
-	/// Tween the value.
-	/// </summary>
-
-	protected override void OnUpdate (float factor, bool isFinished)
-	{
+	/// <summary>Tween the value.</summary>
+	protected override void OnUpdate(float factor, bool isFinished) {
 		value = Mathf.RoundToInt(from * (1f - factor) + to * factor);
 
-		if (updateTable)
-		{
-			if (mTable == null)
-			{
+		if(updateTable) {
+			if(mTable == null) {
 				mTable = NGUITools.FindInParents<UITable>(gameObject);
-				if (mTable == null) { updateTable = false; return; }
+				if(mTable == null) {
+					updateTable = false;
+					return;
+				}
 			}
 			mTable.repositionNow = true;
 		}
 	}
 
-	/// <summary>
-	/// Start the tweening operation.
-	/// </summary>
-
-	static public TweenWidth Begin (UIWidget widget, float duration, int width)
-	{
-		TweenWidth comp = UITweener.Begin<TweenWidth>(widget.gameObject, duration);
+	/// <summary>Start the tweening operation.</summary>
+	public static TweenWidth Begin(UIWidget widget, float duration, int width) {
+		var comp = UITweener.Begin<TweenWidth>(widget.gameObject, duration);
 		comp.from = widget.width;
 		comp.to = width;
 
-		if (duration <= 0f)
-		{
+		if(duration <= 0f) {
 			comp.Sample(1f, true);
 			comp.enabled = false;
 		}
@@ -69,14 +66,22 @@ public class TweenWidth : UITweener
 	}
 
 	[ContextMenu("Set 'From' to current value")]
-	public override void SetStartToCurrentValue () { from = value; }
+	public override void SetStartToCurrentValue() {
+		from = value;
+	}
 
 	[ContextMenu("Set 'To' to current value")]
-	public override void SetEndToCurrentValue () { to = value; }
+	public override void SetEndToCurrentValue() {
+		to = value;
+	}
 
 	[ContextMenu("Assume value of 'From'")]
-	void SetCurrentValueToStart () { value = from; }
+	private void SetCurrentValueToStart() {
+		value = from;
+	}
 
 	[ContextMenu("Assume value of 'To'")]
-	void SetCurrentValueToEnd () { value = to; }
+	private void SetCurrentValueToEnd() {
+		value = to;
+	}
 }

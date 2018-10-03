@@ -6,35 +6,28 @@
 using UnityEngine;
 using System.Collections;
 
-/// <summary>
-/// Simple script that shows how to download a remote texture and assign it to be used by a UITexture.
-/// </summary>
-
+/// <summary>Simple script that shows how to download a remote texture and assign it to be used by a UITexture.</summary>
 [RequireComponent(typeof(UITexture))]
-public class DownloadTexture : MonoBehaviour
-{
+public class DownloadTexture : MonoBehaviour {
 	public string url = "http://www.yourwebsite.com/logo.png";
 	public bool pixelPerfect = true;
 
-	Texture2D mTex;
+	private Texture2D mTex;
 
-	IEnumerator Start ()
-	{
-		WWW www = new WWW(url);
+	private IEnumerator Start() {
+		var www = new WWW(url);
 		yield return www;
 		mTex = www.texture;
 
-		if (mTex != null)
-		{
-			UITexture ut = GetComponent<UITexture>();
+		if(mTex != null) {
+			var ut = GetComponent<UITexture>();
 			ut.mainTexture = mTex;
-			if (pixelPerfect) ut.MakePixelPerfect();
+			if(pixelPerfect) ut.MakePixelPerfect();
 		}
 		www.Dispose();
 	}
 
-	void OnDestroy ()
-	{
-		if (mTex != null) Destroy(mTex);
+	private void OnDestroy() {
+		if(mTex != null) Destroy(mTex);
 	}
 }

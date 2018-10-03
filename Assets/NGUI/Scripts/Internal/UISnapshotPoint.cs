@@ -7,8 +7,7 @@ using UnityEngine;
 
 [ExecuteInEditMode]
 [AddComponentMenu("NGUI/Internal/Snapshot Point")]
-public class UISnapshotPoint : MonoBehaviour
-{
+public class UISnapshotPoint : MonoBehaviour {
 	public bool isOrthographic = true;
 	public float nearClip = -100f;
 	public float farClip = 100f;
@@ -19,5 +18,7 @@ public class UISnapshotPoint : MonoBehaviour
 
 	public Texture2D thumbnail;
 
-	void Start () { if (tag != "EditorOnly") tag = "EditorOnly"; }
+	private void Start() {
+		if(tag != "EditorOnly") tag = "EditorOnly";
+	}
 }
