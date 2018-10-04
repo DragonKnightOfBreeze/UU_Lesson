@@ -43,7 +43,7 @@ namespace UU_Lesson.UI {
 		public GameObject LoadUIScene(UISceneType type) {
 			//加载资源
 			GameObject go = ResourcesMgr.GetInstance()
-				.Load(ResourceType.UIScene_NGUI, type.ToString());
+				.Load(ResourceType.UIScenes_NGUI, type.ToString());
 			//空引用检查
 			if(go == null)
 				Debug.LogError("找不到指定的UI场景！");

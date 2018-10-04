@@ -21,7 +21,6 @@ namespace UU_Lesson.UI {
 	/// <summary>所有场景UI的基类</summary>
 	public class UIScene_Base : UI_Base {
 		/// <summary>容器 居中</summary>
-		[SerializeField]
 		public Transform Container_Center;
 
 		//private static BaseUIScene _Instance;

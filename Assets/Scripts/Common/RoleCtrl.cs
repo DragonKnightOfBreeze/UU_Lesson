@@ -25,9 +25,9 @@ using UU_Lesson.NCamera;
 //using Kernel;
 //using Global;
 
-namespace UU_LessonTest {
+namespace UU_Lesson.Common {
 	/// <summary></summary>
-	public class CharacterCtrl : MonoBehaviour {
+	public class RoleCtrl : MonoBehaviour {
 		/// <summary>移动的目标点</summary>
 		private Vector3 m_TargetPos = Vector3.zero;
 
@@ -77,6 +77,18 @@ namespace UU_LessonTest {
 
 		/// <summary>要注册的方法：点击地面</summary>
 		private void OnPlayerClickGround() {
+			
+//			//检测是否碰撞到UI（只包括按钮 ），如果是，则直接返回
+//			
+//			//如果UI摄像机存在
+//			if(UICamera.currentCamera != null) {
+//				Ray rayUI = UICamera.currentCamera.ScreenPointToRay(Input.mousePosition);
+//				if(Physics.Raycast(rayUI, Mathf.Infinity, 1 << LayerMask.NameToLayer("UI"))) {
+//					Debug.Log("碰撞到了UI层！");
+//					return;
+//				}
+//			}
+			
 			//从摄像机发射一个射线，获取鼠标点击的坐标
 			var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			RaycastHit hitInfo;
@@ -180,20 +192,20 @@ namespace UU_LessonTest {
 			CameraCtrl.Instance.transform.position = gameObject.transform.position;
 			CameraCtrl.Instance.AutoLookAt(gameObject.transform.position);
 
-			/* 按键测试 */
-
-			if(Input.GetKey(KeyCode.A))
-				CameraCtrl.Instance.SetCameraRotate(0);
-			else if(Input.GetKey(KeyCode.D))
-				CameraCtrl.Instance.SetCameraRotate(1);
-			else if(Input.GetKey(KeyCode.W))
-				CameraCtrl.Instance.SetCameraUpAndDown(0);
-			else if(Input.GetKey(KeyCode.A))
-				CameraCtrl.Instance.SetCameraRotate(1);
-			else if(Input.GetKey(KeyCode.I))
-				CameraCtrl.Instance.SetCameraZoom(0);
-			else if(Input.GetKey(KeyCode.O))
-				CameraCtrl.Instance.SetCameraZoom(1);
+//			/* 按键测试 */
+//
+//			if(Input.GetKey(KeyCode.A))
+//				CameraCtrl.Instance.SetCameraRotate(0);
+//			else if(Input.GetKey(KeyCode.D))
+//				CameraCtrl.Instance.SetCameraRotate(1);
+//			else if(Input.GetKey(KeyCode.W))
+//				CameraCtrl.Instance.SetCameraUpAndDown(0);
+//			else if(Input.GetKey(KeyCode.A))
+//				CameraCtrl.Instance.SetCameraRotate(1);
+//			else if(Input.GetKey(KeyCode.I))
+//				CameraCtrl.Instance.SetCameraZoom(0);
+//			else if(Input.GetKey(KeyCode.O))
+//				CameraCtrl.Instance.SetCameraZoom(1);
 
 		}
 	}

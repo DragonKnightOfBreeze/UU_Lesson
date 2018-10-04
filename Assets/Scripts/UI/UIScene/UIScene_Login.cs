@@ -18,16 +18,16 @@ using System.Collections;
 using UU_Lesson.Global;
 using UnityEngine;
 
-namespace UU_Lesson.UI.UIScene {
+namespace UU_Lesson.UI {
 	/// <summary>视图层，登录界面UI</summary>
 	public class UIScene_Login : UIScene_Base {
 //		protected override void OnAwake() {
-//			//加载登录窗体
+//			//加载登录窗口
 //			var go = UIWindowMgr.GetInstance().LoadUIWindow(UIWindowType.Panel_Login);
 //		} 
 
 
-		private const float waitTime = 2f;
+		private const float waitTime = 2f; 
 
 
 		protected override void OnStart() {

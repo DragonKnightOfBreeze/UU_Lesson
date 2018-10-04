@@ -25,7 +25,7 @@ using UnityEngine;
 using UU_Lesson.Common;
 
 namespace UU_Lesson.UI {
-	/// <summary>UI窗体管理器</summary>
+	/// <summary>UI窗口管理器</summary>
 	public class UIWindowMgr : MonoBehaviour {
 		#region ［单例模式］
 
@@ -59,8 +59,8 @@ namespace UU_Lesson.UI {
 
 		#region ［公共方法］
 
-		/// <summary>加载UI窗体，并进行初始化设置</summary>
-		/// <param name="type">UI窗体的类型</param>
+		/// <summary>加载UI窗口，并进行初始化设置</summary>
+		/// <param name="type">UI窗口的类型</param>
 		/// <returns></returns>
 		public GameObject OpenWindow(UIWindowType type) {
 			if(type == UIWindowType.None)
@@ -84,11 +84,11 @@ namespace UU_Lesson.UI {
 			}
 
 
-			//加载窗体
-			go = ResourcesMgr.GetInstance().Load(ResourceType.UIWindow_NGUI, type.ToString(), true);
+			//加载窗口
+			go = ResourcesMgr.GetInstance().Load(ResourceType.UIWindows_NGUI, type.ToString(), true);
 			//空引用检查
 			if(go == null)
-				Debug.LogError("指定的UI窗体不存在！");
+				Debug.LogError("指定的UI窗口不存在！");
 			//得到脚本组件
 			baseUIWindow = go.GetComponent<UIWindow_Base>();
 			//增加到当前UI窗口集合中去
@@ -116,7 +116,7 @@ namespace UU_Lesson.UI {
 			go.transform.localPosition = Vector3.zero;
 			go.transform.localScale = Vector3.one;
 
-			//默认不显示窗体
+			//默认不显示窗口
 			NGUITools.SetActive(go, false);
 			//按照显示类型，进行处理
 			HandleWindowShow(baseUIWindow, true);
@@ -128,8 +128,8 @@ namespace UU_Lesson.UI {
 		}
 
 
-		/// <summary>关闭窗体（实际上是销毁了）</summary>
-		/// <param name="type">UI窗体的类型</param>
+		/// <summary>关闭窗口（实际上是销毁了）</summary>
+		/// <param name="type">UI窗口的类型</param>
 		public void CloseWindow(UIWindowType type) {
 			UIWindow_Base baseUIWindow;
 			_DicCurUIWindows.TryGetValue(type, out baseUIWindow);
@@ -138,14 +138,14 @@ namespace UU_Lesson.UI {
 				return;
 
 			//必须要先移除，后销毁
-			//从已打开的窗体的字典中删去。
+			//从已打开的窗口的字典中删去。
 			_DicCurUIWindows.Remove(type);
 			Destroy(baseUIWindow.gameObject);
 			//HandleWindowShow(baseUIWindow,false);
 		}
 
-		/// <summary>销毁窗体</summary>
-		/// <param name="type">UI窗体的类型</param>
+		/// <summary>销毁窗口</summary>
+		/// <param name="type">UI窗口的类型</param>
 		public void DestroyWindow(UIWindowType type) {
 			UIWindow_Base baseUIWindow;
 
@@ -163,7 +163,7 @@ namespace UU_Lesson.UI {
 
 		#region ［私有方法］
 
-		/// <summary>按照窗体的显示类型，进行处理</summary>
+		/// <summary>按照窗口的显示类型，进行处理</summary>
 		/// <param name="baseUIWindow"></param>
 		/// <param name="isOpen">打开/关闭</param>
 		private void HandleWindowShow(UIWindow_Base baseUIWindow, bool isOpen) {

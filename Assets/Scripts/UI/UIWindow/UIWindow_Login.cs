@@ -13,7 +13,7 @@
  * 
  * 
  * ［用法］
- * 挂载到相应的UI窗体上
+ * 挂载到相应的UI窗口上
  *
  * TODO：分离检查方法
  */
@@ -77,7 +77,7 @@ namespace UU_Lesson.UI {
 			}
 
 			//准备切换场景
-			ScenesMgr.GetInstance().NextSceneType = SceneType.Village;
+			ScenesMgr.GetInstance().NextSceneType = SceneType.Scene_Village1;
 			ScenesMgr.GetInstance().LoadToLoadingScene();
 		}
 
@@ -85,7 +85,7 @@ namespace UU_Lesson.UI {
 		private void BtnToReg() {
 			//关闭当前窗口
 			Close();
-			//指定下一个要打开的窗体（被关闭后自动打开）
+			//指定下一个要打开的窗口（被关闭后自动打开）
 			nextOpenWindow = UIWindowType.Panel_Register;
 //			//打开注册窗口
 //			UIWindowMgr.GetInstance().OpenWindow(UIWindowType.Panel_Register);

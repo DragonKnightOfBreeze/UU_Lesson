@@ -13,7 +13,7 @@
  * 
  * ［用法］
  * 单例模式，动态挂载
- *
+ * 在场景切换时不消失
  */
 using System;
 using System.Collections;
@@ -29,16 +29,19 @@ namespace UU_Lesson.Common {
 
 		public static ResourcesMgr GetInstance() {
 			if(_Instance == null)
-				_Instance = _Instance = new GameObject("_" + nameof(ResourcesMgr)).AddComponent<ResourcesMgr>();
+				_Instance = new GameObject("_" + nameof(ResourcesMgr)).AddComponent<ResourcesMgr>();
 			return _Instance;
 		}
 
 		#endregion
 
-
 		/// <summary>资源缓存</summary>
 		private readonly Hashtable resourceCache = new Hashtable();
 
+		void Awake() {
+			DontDestroyOnLoad(gameObject);
+		}
+		
 
 		/// <summary>加载资源</summary>
 		/// <param name="type">资源类型</param>
@@ -73,9 +76,5 @@ namespace UU_Lesson.Common {
 			Resources.UnloadUnusedAssets();
 		}
 
-
-		#region ［具体的加载方法］
-
-		#endregion
 	}
 }

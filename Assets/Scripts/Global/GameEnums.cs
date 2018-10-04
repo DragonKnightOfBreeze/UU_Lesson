@@ -13,7 +13,8 @@
  * 
  * 
  * ［用法］
- * 
+ * 枚举类型应该和预设的名称对应上
+ * 比定义一堆常量更好的解决方式
  */
 
 
@@ -23,33 +24,22 @@
 namespace UU_Lesson.Global {
 	/// <summary>游戏枚举</summary>
 	public static class GameEnums {
-		public static string Tostring(ResourceType enumMember) {
-			var str = string.Empty;
-			switch(enumMember) {
-				case ResourceType.UIScene_NGUI:
-					str = "Prefabs/UIScenes((NGUI)/";
-					break;
-				case ResourceType.UIWindow_NGUI:
-					str = "Prefabs/UIWindows(NGUI)/";
-					break;
-				case ResourceType.Role:
-					str = "Prefabs/Characters/";
-					break;
-				case ResourceType.Effect:
-					str = "Prefabs/Effects/";
-					break;
-			}
-			return str;
-		}
+
 	}
 
 
 	/// <summary>场景类型</summary>
 	public enum SceneType {
+		/// <summary>初始化场景</summary>
+		InitScene,
 		/// <summary>登录场景</summary>
 		LoginScene,
+		/// <summary>加载场景</summary>
 		LoadingScene,
-		Village
+		/// <summary>
+		/// 村庄1
+		/// </summary>
+		Scene_Village1
 	}
 
 
@@ -72,26 +62,30 @@ namespace UU_Lesson.Global {
 	/// <summary>资源类型</summary>
 	public enum ResourceType {
 		/// <summary>场景UI</summary>
-		UIScene_NGUI,
+		UIScenes_NGUI,
 		/// <summary>窗口UI</summary>
-		UIWindow_NGUI,
+		UIWindows_NGUI,
 		/// <summary>角色</summary>
-		Role,
+		Roles,
 		/// <summary>特效</summary>
-		Effect
+		Effects
 	}
 
 
 	#region ［UI相关］
 
-	/// <summary>UI窗体的类型</summary>
+	/// <summary>UI窗口的类型</summary>
 	public enum UIWindowType {
 		/// <summary>未设置</summary>
 		None,
-		/// <summary>登录窗体</summary>
+		/// <summary>登录窗口</summary>
 		Panel_Login,
-		/// <summary>注册窗体</summary>
-		Panel_Register
+		/// <summary>注册窗口</summary>
+		Panel_Register,
+		/// <summary>
+		/// 角色信息窗口
+		/// </summary>
+		Panel_RoleInfo
 	}
 
 
@@ -107,7 +101,7 @@ namespace UU_Lesson.Global {
 	}
 
 
-	/// <summary>UI窗体容器的类型</summary>
+	/// <summary>UI窗口容器的类型</summary>
 	public enum UIWindowContainerType {
 		/// <summary>左上方</summary>
 		TL,

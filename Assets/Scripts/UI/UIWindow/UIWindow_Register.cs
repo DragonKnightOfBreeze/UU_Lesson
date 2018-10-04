@@ -13,7 +13,7 @@
  * 
  * 
  * ［用法］
- * 挂载到相应的UI窗体上
+ * 挂载到相应的UI窗口上
  *
  * TODO：分离检查方法
  * TODO：更准确的格式检查
@@ -53,7 +53,7 @@ namespace UU_Lesson.UI {
 		private void BtnToLogin() {
 			//关闭当前窗口
 			Close();
-			//指定下一个要打开的窗体（被关闭后自动打开）
+			//指定下一个要打开的窗口（被关闭后自动打开）
 			nextOpenWindow = UIWindowType.Panel_Login;
 //			//打开注册窗口
 //			UIWindowMgr.GetInstance().OpenWindow(UIWindowType.Panel_Login);
@@ -94,7 +94,7 @@ namespace UU_Lesson.UI {
 			PlayerPrefs.SetString(GameConsts.Player_Password, password);
 
 			//准备切换场景
-			ScenesMgr.GetInstance().NextSceneType = SceneType.Village;
+			ScenesMgr.GetInstance().NextSceneType = SceneType.Scene_Village1;
 			ScenesMgr.GetInstance().LoadToLoadingScene();
 		}
 

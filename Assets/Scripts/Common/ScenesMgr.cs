@@ -3,7 +3,6 @@
  * 项目：UU课堂
  * 作者：微风的龙骑士 风游迩
  * 
- * ［标题］
  * 场景管理器
  * 
  * ［功能］
@@ -13,15 +12,13 @@
  * 
  * 
  * ［用法］
- * 
+ * 单例模式，动态挂载
+ * 在场景切换时不消失
  */
 using UU_Lesson.Global;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UU_Lesson.UI;
-
-//using Kernel;
-//using Global;
 
 namespace UU_Lesson.Common {
 	/// <summary>场景管理器</summary>
@@ -30,8 +27,6 @@ namespace UU_Lesson.Common {
 
 		private static ScenesMgr _Instance;
 
-		/// <summary>得到单例实例，动态挂载</summary>
-		/// <returns>单例实例</returns>
 		public static ScenesMgr GetInstance() {
 			if(_Instance == null)
 				_Instance = new GameObject("_" + nameof(ScenesMgr)).AddComponent<ScenesMgr>();
@@ -40,10 +35,15 @@ namespace UU_Lesson.Common {
 
 		#endregion
 
-
+		void Awake() {
+			DontDestroyOnLoad(gameObject);
+		}
+		
 		/// <summary>当前场景类型</summary>
 		public SceneType CurSceneType { get; private set; }
-
+		/// <summary>
+		/// 接下来的场景类型
+		/// </summary>
 		public SceneType NextSceneType { get; set; }
 
 		/// <summary>加载场景</summary>

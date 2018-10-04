@@ -23,8 +23,6 @@ using UU_Lesson.UI;
 namespace UU_Lesson.Common {
 	/// <summary>控制层，登录场景控制</summary>
 	public class Ctrl_LoginScene : MonoBehaviour {
-		//延迟时间
-		private const float waitTime = 3f;
 
 //		void Awake() {
 //			GameObject go = ResourcesMgr.GetInstance().Load(ResourceType.UIScene_NGUI, GameConsts.PATH_UIScene_UIRoot_LoginScene);
@@ -35,9 +33,7 @@ namespace UU_Lesson.Common {
 //		}
 
 
-		private IEnumerator Start() {
-			//等待一段时间
-			yield return new WaitForSeconds(waitTime);
+		private void Start() {
 			//加载UI场景
 			UISceneMgr.GetInstance().LoadUIScene(UISceneType.UIRoot_LoginScene);
 		}

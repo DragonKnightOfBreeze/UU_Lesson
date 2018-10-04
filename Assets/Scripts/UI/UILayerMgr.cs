@@ -49,7 +49,7 @@ namespace UU_Lesson.UI {
 				panelArray[i].depth += uiPanelDepth;
 		}
 
-		/// <summary>重置深度（其他窗体已经被关闭了）</summary>
+		/// <summary>重置深度（其他窗口已经被关闭了）</summary>
 		public void ResetDepth() {
 			uiPanelDepth = 50;
 		}
