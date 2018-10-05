@@ -19,9 +19,10 @@ using System.Collections;
 using UU_Lesson.Global;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UU_Lesson.Common;
 using UU_Lesson.UI;
 
-namespace UU_Lesson.Common {
+namespace UU_Lesson.Controller.Scene {
 	/// <summary></summary>
 	public class Ctrl_LoadingScene : MonoBehaviour {
 		/// <summary>UI场景控制器</summary>
@@ -59,6 +60,8 @@ namespace UU_Lesson.Common {
 			//只有进度条走到100，才能进入下一个场景
 			_Async.allowSceneActivation = false;
 			yield return _Async;
+			//销毁没有的资源
+			Resources.UnloadUnusedAssets();
 		}
 
 		/// <summary>

@@ -20,9 +20,6 @@ using UnityEngine;
 namespace UU_Lesson.UI {
 	/// <summary></summary>
 	public class UI_Base : MonoBehaviour {
-		/// <summary>UI的名字</summary>
-		[HideInInspector]
-		public string UIName;
 
 
 		private void Awake() {

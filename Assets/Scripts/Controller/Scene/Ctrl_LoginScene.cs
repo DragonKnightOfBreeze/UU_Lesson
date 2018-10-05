@@ -20,7 +20,7 @@ using UU_Lesson.Global;
 using UnityEngine;
 using UU_Lesson.UI;
 
-namespace UU_Lesson.Common {
+namespace UU_Lesson.Controller.Scene {
 	/// <summary>控制层，登录场景控制</summary>
 	public class Ctrl_LoginScene : MonoBehaviour {
 

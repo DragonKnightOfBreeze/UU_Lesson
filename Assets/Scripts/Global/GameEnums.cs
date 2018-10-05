@@ -23,9 +23,7 @@
 
 namespace UU_Lesson.Global {
 	/// <summary>游戏枚举</summary>
-	public static class GameEnums {
-
-	}
+	public static class GameEnums { }
 
 
 	/// <summary>场景类型</summary>
@@ -36,9 +34,7 @@ namespace UU_Lesson.Global {
 		LoginScene,
 		/// <summary>加载场景</summary>
 		LoadingScene,
-		/// <summary>
-		/// 村庄1
-		/// </summary>
+		/// <summary>村庄1</summary>
 		Scene_Village1
 	}
 
@@ -82,9 +78,7 @@ namespace UU_Lesson.Global {
 		Panel_Login,
 		/// <summary>注册窗口</summary>
 		Panel_Register,
-		/// <summary>
-		/// 角色信息窗口
-		/// </summary>
+		/// <summary>角色信息窗口</summary>
 		Panel_RoleInfo
 	}
 
@@ -132,5 +126,68 @@ namespace UU_Lesson.Global {
 		FromRight
 	}
 
+	#endregion
+
+
+	#region ［角色相关］
+
+	/// <summary>角色类型</summary>
+	public enum RoleType {
+		/// <summary>未定义</summary>
+		None,
+		/// <summary>玩家（当前玩家，本地玩家）</summary>
+		Player,
+		/// <summary>玩家（其他玩家，联机玩家）</summary>
+		OtherPlayer,
+		/// <summary>敌人（普通敌人）</summary>
+		Enemy,
+		/// <summary>BOSS（强大的敌人）</summary>
+		Boss,
+		/// <summary>NPC（非玩家友好角色）</summary>
+		NPC
+	}
+
+	/// <summary>角色状态</summary>
+	public enum RoleState {
+		/// <summary>未定义</summary>
+		None,
+		/// <summary>待机状态</summary>
+		Idle,
+		/// <summary>奔跑状态</summary>
+		Run,
+		/// <summary>普通攻击状态</summary>
+		NormalAtk,
+		/// <summary>受伤状态</summary>
+		Hurt,
+		/// <summary>死亡状态</summary>
+		Die,
+		/// <summary>使用技能状态</summary>
+		Skill
+	}
+
+	/// <summary>
+	/// 角色动画状态的名字（这个真的有必要吗？）
+	/// </summary>
+	public enum RoleAnimatorStateName {
+		Idle_Normal,
+		Idle_Fight,
+		Run,
+		Hurt,
+		Die,
+		NormalAtk1,
+		NormalAtk2,
+		NormalAtk3
+	}
+
+	/// <summary>
+	/// FSM状态转换条件
+	/// </summary>
+	public enum FSMCondition {
+		ToIdleNormal,
+		TOIdleFight,
+		ToRun,
+		
+	}
+	
 	#endregion
 }

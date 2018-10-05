@@ -251,16 +251,32 @@
     <Compile Include="Assets\OuterScripts\Sample\SingletonSample.cs" />
     <Compile Include="Assets\OuterScripts\Test\BoxCtrl.cs" />
     <Compile Include="Assets\OuterScripts\Test\BoxCtrl2.cs" />
-    <Compile Include="Assets\OuterScripts\Test\CharacterCtrl.cs" />
     <Compile Include="Assets\OuterScripts\Test\MonoTest.cs" />
     <Compile Include="Assets\OuterScripts\Test\TestSceneCtrl.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraCtrl.cs" />
-    <Compile Include="Assets\Scripts\Common\Ctrl_LoadingScene.cs" />
-    <Compile Include="Assets\Scripts\Common\Ctrl_LoginScene.cs" />
     <Compile Include="Assets\Scripts\Common\FingerEvent.cs" />
     <Compile Include="Assets\Scripts\Common\GlobalInit.cs" />
     <Compile Include="Assets\Scripts\Common\ResourcesMgr.cs" />
     <Compile Include="Assets\Scripts\Common\ScenesMgr.cs" />
+    <Compile Include="Assets\Scripts\Controller\Role\AI\IRoleAI.cs" />
+    <Compile Include="Assets\Scripts\Controller\Role\AI\RoleAI_Enemy.cs" />
+    <Compile Include="Assets\Scripts\Controller\Role\AI\RoleAI_Player_InDungeon.cs" />
+    <Compile Include="Assets\Scripts\Controller\Role\AI\RoleAI_Player_InMajorCity.cs" />
+    <Compile Include="Assets\Scripts\Controller\Role\FSM\RoleFSMMgr.cs" />
+    <Compile Include="Assets\Scripts\Controller\Role\FSM\State\RoleState_Attack.cs" />
+    <Compile Include="Assets\Scripts\Controller\Role\FSM\State\RoleState_Die.cs" />
+    <Compile Include="Assets\Scripts\Controller\Role\FSM\State\RoleState_Hurt.cs" />
+    <Compile Include="Assets\Scripts\Controller\Role\FSM\State\RoleState_Idle.cs" />
+    <Compile Include="Assets\Scripts\Controller\Role\FSM\State\RoleState_Run.cs" />
+    <Compile Include="Assets\Scripts\Controller\Role\FSM\State\RoleStateAbstract.cs" />
+    <Compile Include="Assets\Scripts\Controller\Role\Info\RoleInfo_Enemy.cs" />
+    <Compile Include="Assets\Scripts\Controller\Role\Info\RoleInfo_Player.cs" />
+    <Compile Include="Assets\Scripts\Controller\Role\Info\RoleInfoBase.cs" />
+    <Compile Include="Assets\Scripts\Controller\Role\RoleCtrl.cs" />
+    <Compile Include="Assets\Scripts\Controller\Scene\Ctrl_InitScene.cs" />
+    <Compile Include="Assets\Scripts\Controller\Scene\Ctrl_LoadingScene.cs" />
+    <Compile Include="Assets\Scripts\Controller\Scene\Ctrl_LoginScene.cs" />
+    <Compile Include="Assets\Scripts\Controller\Scene\Ctrl_MajorCity.cs" />
     <Compile Include="Assets\Scripts\Core\Singleton.cs" />
     <Compile Include="Assets\Scripts\Global\GameConsts.cs" />
     <Compile Include="Assets\Scripts\Global\GameEnums.cs" />
@@ -271,10 +287,12 @@
     <Compile Include="Assets\Scripts\UI\UIScene\UIScene_Base.cs" />
     <Compile Include="Assets\Scripts\UI\UIScene\UIScene_Loading.cs" />
     <Compile Include="Assets\Scripts\UI\UIScene\UIScene_Login.cs" />
+    <Compile Include="Assets\Scripts\UI\UIScene\UIScene_MajorCity.cs" />
     <Compile Include="Assets\Scripts\UI\UISceneMgr.cs" />
     <Compile Include="Assets\Scripts\UI\UIWindow\UIWindow_Base.cs" />
     <Compile Include="Assets\Scripts\UI\UIWindow\UIWindow_Login.cs" />
     <Compile Include="Assets\Scripts\UI\UIWindow\UIWindow_Register.cs" />
+    <Compile Include="Assets\Scripts\UI\UIWindow\UIWindow_RoleInfo.cs" />
     <Compile Include="Assets\Scripts\UI\UIWindowMgr.cs" />
     <Compile Include="Assets\Scripts\Util\UnityUtil.cs" />
     <None Include="Assets\NGUI\Examples\Shaders\Unlit - Depth Cutout.shader" />
@@ -282,6 +300,7 @@
     <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Masked 1.shader" />
     <None Include="Assets\NGUI\Resources\Shaders\Unlit - Text 2.shader" />
     <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Masked 2.shader" />
+    <None Include="Assets\Resources\RoleModel\NPC\xianzi\动作参数.txt" />
     <None Include="Assets\NGUI\Examples\Models\Orc\Orc Skin.shader" />
     <None Include="Assets\NGUI\Examples\Atlases\Wooden\Arimo20.txt" />
     <None Include="Assets\NGUI\Examples\Atlases\Wooden\Arimo14.txt" />
@@ -294,6 +313,7 @@
     <None Include="Assets\FingerGestures\Readme.txt" />
     <None Include="Assets\NGUI\Examples\Atlases\Wooden\Arimo18.txt" />
     <None Include="Assets\Documents\Origin\2\术语.txt" />
+    <None Include="Assets\Resources\Animations\Players\动画帧数刺客.txt" />
     <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored (TextureClip).shader" />
     <None Include="Assets\NGUI\Examples\Atlases\SciFi\SciFi Font - Header.txt" />
     <None Include="Assets\Documents\Origin\知识点\ExecuteInEditMode.txt" />
@@ -306,6 +326,7 @@
     <None Include="Assets\NGUI\Resources\Shaders\Unlit - Text 3.shader" />
     <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Packed 2.shader" />
     <None Include="Assets\Documents\Origin\知识点\unity平台路径.txt" />
+    <None Include="Assets\Resources\RoleModel\Monster\nvbing\怪物-近战女兵.txt" />
     <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Packed 1.shader" />
     <None Include="Assets\NGUI\Resources\Shaders\Unlit - Premultiplied Colored 1.shader" />
     <None Include="Assets\NGUI\Resources\Shaders\Unlit - Premultiplied Colored.shader" />
@@ -316,8 +337,10 @@
     <None Include="Assets\Documents\Origin\2\角色动画名称.txt" />
     <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Packed.shader" />
     <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Packed 3.shader" />
+    <None Include="Assets\Resources\RoleModel\Boss\dazhuang\帧数参数.txt" />
     <None Include="Assets\NGUI\Examples\Shaders\Unlit - Additive Colored.shader" />
     <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Masked.shader" />
+    <None Include="Assets\Documents\NewFile1.txt" />
     <None Include="Assets\NGUI\Examples\Atlases\Refractive\Refractive Font - Header.txt" />
     <None Include="Assets\NGUI\Examples\Shaders\Refractive.shader" />
     <None Include="Assets\NGUI\Resources\Shaders\Unlit - Text (TextureClip).shader" />
@@ -325,6 +348,7 @@
     <None Include="Assets\NGUI\Examples\Atlases\SciFi\SciFi Font - Normal.txt" />
     <None Include="Assets\NGUI\Examples\Models\Orc Armor\Orc Armor.shader" />
     <None Include="Assets\NGUI\Examples\Resources\Localization.txt" />
+    <None Include="Assets\Resources\Animations\Enemies\怪物-亲兵的动画帧数.txt" />
     <Reference Include="UnityEditor.StandardEvents">
       <HintPath>D:/My Documents/My Projects/Unity Projects/Tutorial/UU/UU_Lesson/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>

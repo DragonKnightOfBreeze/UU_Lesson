@@ -13,7 +13,6 @@
  * 
  * ［用法］
  * 单例模式，动态挂载
- * 在场景切换时不消失
  */
 using System;
 using System.Collections;

@@ -19,7 +19,7 @@ using UnityEngine;
 using UU_Lesson.Global;
 using UU_Lesson.UI;
 
-namespace UU_Lesson.Common {
+namespace UU_Lesson.Controller.Scene {
 	/// <summary> 
 	///
 	/// </summary>

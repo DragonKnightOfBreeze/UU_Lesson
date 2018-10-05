@@ -20,8 +20,6 @@
 //using Kernel;
 //using Global;
 
-using System.CodeDom;
-
 namespace UU_Lesson.Global {
 	/// <summary>游戏常量类</summary>
 	public static class GameConsts {

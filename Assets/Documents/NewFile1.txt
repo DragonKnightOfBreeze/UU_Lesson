@@ -1,0 +1,12 @@
+如果当前状态就是自己的状态，则不进行切换
+
+CurState
+
+1=Idle_Normal
+2=Idle_FIght
+3=Run
+4=Hurt
+5=Die
+6=NormalAtk
+
+作为一个Int型状态机参数，判断不等于

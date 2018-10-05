@@ -17,9 +17,10 @@
 
 using System.Collections;
 using UnityEngine;
+using UU_Lesson.Common;
 using UU_Lesson.Global;
 
-namespace UU_Lesson.Common {
+namespace UU_Lesson.Controller.Scene {
 	/// <summary> 
 	///
 	/// </summary>
